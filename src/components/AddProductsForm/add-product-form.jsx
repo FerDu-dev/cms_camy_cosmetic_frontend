@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getProductTypes, getBrands } from '../../api/brands&types';
-import { Button, Drawer, Form, Input, Select, Upload } from 'antd';
+import { Button, Drawer, Form, Input, Select, Upload, AutoComplete } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import {emptyFields} from '../../helpers/constantFunctions'
+import fetchOptions from '../../api/autocomplete';
 
 const { Option } = Select;
 
@@ -22,6 +23,7 @@ export const AddProductForm = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [validation, setValidation] = useState({name: false, type: false, brand: false, price: false, quantity: false, variant: false});
   const [submitted, setSubmitted] = useState(false);
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
     const fetchProductTypesAndBrands = async () => {
@@ -123,6 +125,20 @@ export const AddProductForm = () => {
     }
 }
 
+const handleSearch = async (value, type_model) => {
+  const results = await fetchOptions(value || '', type_model);
+  console.log("res",results)
+  if (type_model === 'product_type') {
+    setProductTypes(results);
+  } else if (type_model === 'brand') {
+    setBrands(results);
+  }
+};
+
+const handleFocus = (type_model) => {
+  handleSearch('', type_model);
+};
+
   return (
     <>
       <Button type="primary" onClick={handleOpenDrawer} style={{marginBottom:"0.5rem"}}>
@@ -136,19 +152,21 @@ export const AddProductForm = () => {
           </Form.Item>
           
           <Form.Item label="Tipo de producto" name="type">
-            <Select name="type" onChange={(value) => handleSelectChange(value, 'type')}>
-              {productTypes && productTypes.map((type) => (
-                <Option key={type.id} value={type.id}>{type.name}</Option>
-              ))}
-            </Select>
+          <AutoComplete
+            options={productTypes}
+            onSearch={(value) => handleSearch(value, 'product_type')}
+            onSelect={(value) => handleSelectChange(value, 'type')}
+             onFocus={() => handleFocus('product_type')}
+          />
           </Form.Item>
           
           <Form.Item label="Marca" name="brand">
-            <Select name="brand" onChange={(value) => handleSelectChange(value, 'brand')}>
-              {brands && brands.map((brand) => (
-                <Option key={brand.id} value={brand.id}>{brand.name}</Option>
-              ))}
-            </Select>
+          <AutoComplete
+            options={brands}
+            onSearch={(value) => handleSearch(value, 'brand')}
+            onSelect={(value) => handleSelectChange(value, 'brand')}
+            onFocus={() => handleFocus('brand')}
+          />
           </Form.Item>
           
           <Form.Item label="Precio" name="price">
