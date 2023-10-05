@@ -14,14 +14,7 @@ export const Login = () => {
     const [validation, setValidation] = useState({email: false, password: false});
     const [submitted, setSubmitted] = useState(false);
 
-    useEffect(() => {
-        const verifyAdminUser = async () => {
-            const adminUser = await verifyAdmin();
-            console.log(adminUser);
-        }
-        verifyAdminUser();
-    }, []);
-
+ 
     useEffect(() => {
         const fieldsAreValid = emptyFields({ email, password });
         setIsButtonDisabled(!fieldsAreValid);
@@ -35,7 +28,9 @@ export const Login = () => {
         if (!isButtonDisabled) {
             try {
                 const user = await login({ email, password });
-                navigate('/home');
+                if (user) {
+                    navigate('/home');
+                }
             } catch (error) {
                 console.log(error.message);
             }

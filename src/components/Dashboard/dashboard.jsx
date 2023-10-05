@@ -4,9 +4,11 @@ import AppHeader from "../Header/header";
 import Sidebar from "../Sidebar/sidebar";
 import Profile from "../Profile/profile";
 import ProductsTablePage from "../../pages/ProductsTablePage/products-table-page";
+import { LoginPage } from "../../pages/LoginPage/LoginPage";
 import { BrandForm } from "../FormProductBrand/form-product-brand";
 import { ProductTypeForm } from "../FormProductType/form-product-type";
 import { SettingsPage } from "../../pages/SettingsPage/settings-page";
+import PrivateRoute from "../../containers/routing/private-routes";
 import { SalesPage } from "../../pages/SalesPage/sales-page";
 import { Layout } from 'antd'
 import { useNavigate } from "react-router-dom";
@@ -74,13 +76,13 @@ export const Dashboard = () => {
               windowWidth={windowWidth} 
               />
             <div style={{ flex: 1, boxShadow: '0px 0px 5px rgba(0,0,0,0.5) inset', padding: '20px' }}>
-              <Routes>
-                <Route path="profile" element={<Profile user={user} />} />
-                <Route path="table-products" element={<ProductsTablePage />} />
-                <Route path="sales" element={<SalesPage />} />
-                <Route path="product-brands" element={<BrandForm />} />
-                <Route path="product-types" element={<ProductTypeForm />} />
-              </Routes>
+            <Routes>
+              <Route path="profile" element={<Profile user={user} />} />
+              <Route path="table-products" element={<ProductsTablePage />} />
+              <Route path="/sales" element={<PrivateRoute><SalesPage /></PrivateRoute>} />
+              <Route path="/product-brands" element={<PrivateRoute><BrandForm /></PrivateRoute>} />
+              <Route path="/product-types" element={<PrivateRoute><ProductTypeForm /></PrivateRoute>} />
+            </Routes>
             </div>
           </div>
         </div>

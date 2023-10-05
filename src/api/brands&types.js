@@ -1,3 +1,5 @@
+import httpClient from "../config/httpClient";
+
 const simulatedBrands = [
     { id:1, name: 'Marca 1' },
     { id:2, name: 'Marca 2' },
@@ -10,48 +12,44 @@ const simulatedBrands = [
    
   ];
   
-  export const getBrands = async () => {
+ 
+
+  export const getProductTypes = async (page, limit) => {
     try {
-     
-      return simulatedBrands;
-  
-    
+      const response = await httpClient.get(`/settings/products_type?page=${page}&limit=${limit}`);
+      return response.data;
     } catch (e) {
       console.log(e);
     }
   };
   
-  export const getProductTypes = async () => {
+
+export const createProductType = async (newProductType) => {
+  try {
+    const response = await httpClient.post('/settings/products_type', newProductType);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+  export const getBrands = async (page,limit) => {
     try {
-      
-      return simulatedProductTypes;
-  
-     
+      const response = await httpClient.get(`/settings/brand?page=${page}&limit=${limit}`);
+      return response.data;
     } catch (e) {
       console.log(e);
     }
   };
+  
   
   export const createBrand = async (brand) => {
     try {
-     
-      simulatedBrands.push(brand);
-      return brand;
-  
-      
+      const response = await httpClient.post('/settings/brand', brand);
+      return response.data;
     } catch (e) {
       console.log(e);
     }
   };
   
-  export const createProductType = async (productType) => {
-    try {
-    
-      simulatedProductTypes.push(productType);
-      return productType;
-  
-    } catch (e) {
-      console.log(e);
-    }
-  };
   

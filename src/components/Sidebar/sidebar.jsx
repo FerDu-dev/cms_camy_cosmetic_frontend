@@ -26,10 +26,10 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
         </div>
           <Menu.SubMenu key="sub1" icon={<TableOutlined />} title="Tienda">
             <Menu.Item key="1">
-            <Link style={{textDecoration:"none", color:"black"}} to="/table-products">Inventario</Link>
+            <Link style={{textDecoration:"none", color:"black"}} to="/home/table-products">Inventario</Link>
             </Menu.Item>
             <Menu.Item key="2">
-            <Link style={{textDecoration:"none", color:"black"}} to="/sales">Ventas</Link>
+            <Link style={{textDecoration:"none", color:"black"}} to="/home/sales">Ventas</Link>
             </Menu.Item>
           </Menu.SubMenu>
           <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Profiles">
@@ -38,10 +38,10 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
           </Menu.SubMenu>
           <Menu.SubMenu key="sub1" icon={<SettingOutlined />} title="Configuracion">
             <Menu.Item key="1">
-            <Link style={{textDecoration:"none", color:"black"}} to="/product-brands">Inventario</Link>
+            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-brands">Inventario</Link>
             </Menu.Item>
             <Menu.Item key="2">
-            <Link style={{textDecoration:"none", color:"black"}} to="/product-types">Ventas</Link>
+            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-types">Ventas</Link>
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>
@@ -54,7 +54,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
           <h3 style={{color:"#FFB6C1", fontWeight:"bold", padding:"5px"}}>Camy makeup</h3>
         </div>
           <Menu.Item key="1" icon={<TableOutlined />}>
-            <Link style={{textDecoration:"none"}} to="/table-products">Inventario</Link>
+            <Link style={{textDecoration:"none"}} to="/home/table-products">Inventario</Link>
           </Menu.Item>
           {/* <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="Tienda">
             <Menu.Item key="1">
@@ -71,10 +71,10 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
 
           <Menu.SubMenu key="sub3" icon={<SettingOutlined />} title="Configuracion">
             <Menu.Item key="6">
-            <Link style={{textDecoration:"none", color:"black"}} to="/product-brands">Marcas</Link>
+            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-brands">Marcas</Link>
             </Menu.Item>
             <Menu.Item key="7">
-            <Link style={{textDecoration:"none", color:"black"}} to="/product-types">Prductos</Link>
+            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-types">Prductos</Link>
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>
