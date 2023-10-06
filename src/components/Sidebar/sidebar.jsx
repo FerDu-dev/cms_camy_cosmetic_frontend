@@ -21,7 +21,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
         open={visible}
       >
         <Menu theme="white" mode="inline" defaultSelectedKeys={["1"]} style={{height:"100vh", backgroundColor:"#FAEBD7"}}>
-        <div className='logo-container'>
+        {/* <div className='logo-container'>
           <img src={logo} width='100' height='100'/>
         </div>
           {
