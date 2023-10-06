@@ -7,12 +7,16 @@ import BrandSetting from '../../pages/BrandSetting/BrandSetting';
 import ProductTypeSetting from '../../pages/ProductTypeSetting/ProductTypeSetting';
 import Product from '../../pages/Product';
 import StorePage from '../../pages/StorePage';
+import StoreEmployees from '../../pages/StoreEmployees';
+import StoreSales from '../../pages/StoreSales';
+import StoreStock from '../../pages/StoreStock';
+import StoreConfiguration from '../../pages/StoreConfiguration';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ModalNotLogin } from '../../components/Modals/Modals';
 import PrivateRoute from './private-routes';
 import Page from '../Page/Page';
-import { UserOutlined, HomeOutlined, KeyOutlined, TableOutlined, SettingOutlined } from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, KeyOutlined, TableOutlined, SettingOutlined, ShopOutlined } from "@ant-design/icons";
 
 export const routes = [
     {
@@ -26,6 +30,41 @@ export const routes = [
         icon: <TableOutlined />,
         menu: true,
         element: <PrivateRoute><Page><Product /></Page></PrivateRoute>
+    },
+    {
+        path: '/tienda',
+        title: 'Tienda',
+        icon: <ShopOutlined />,
+        menu: true,
+        haveSubMenu: true,
+        element: <PrivateRoute><Page><StorePage/></Page></PrivateRoute>,
+        children : [
+            {
+                title: 'Inventario',
+                path: 'inventario',
+                element: <StoreStock/>,
+                subMenu: true,
+            },
+            {
+                title: 'Ventas',
+                path: 'ventas',
+                element: <StoreSales />,
+                subMenu: true,
+            },
+            {
+                title: 'Empleados',
+                path: 'empleados',
+                element: <StoreEmployees />,
+                subMenu: true,
+            },
+            {
+                title: 'Configuracion',
+                path: 'configuracion',
+                element: <StoreConfiguration/>,
+                subMenu: true,
+            },
+        ]
+        
     },
     {
         title: 'Configuracion',
