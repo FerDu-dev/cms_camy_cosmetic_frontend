@@ -4,6 +4,7 @@ import { Button, Drawer, Form, Input, Select, Upload, AutoComplete } from 'antd'
 import { UploadOutlined } from '@ant-design/icons';
 import {emptyFields} from '../../helpers/constantFunctions'
 import fetchOptions from '../../api/autocomplete';
+import { createProduct } from '../../api/products';
 
 const { Option } = Select;
 
@@ -14,12 +15,12 @@ export const AddProductForm = () => {
     type: '',
     brand: '',
     price: '',
-    quantity: '',
-    variant: ''
   });
   const [images, setImages] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [productTypeID, setProductTypeID] = useState(null);
+  const [brandID, setBrandID] = useState(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [validation, setValidation] = useState({name: false, type: false, brand: false, price: false, quantity: false, variant: false});
   const [submitted, setSubmitted] = useState(false);
@@ -44,8 +45,6 @@ export const AddProductForm = () => {
         type: !product.type,
         brand: !product.brand,
         price: !product.price,
-        quantity: !product.quantity,
-        variant: !product.variant
       });
     }
   }, [product, submitted]);
@@ -83,47 +82,86 @@ export const AddProductForm = () => {
   };
 
   const handleSelectChange = (value, name) => {
+    let selectedId;
+    if (name === 'type') {
+      const selectedType = productTypes.find(type => type.value === value);
+      selectedId = selectedType.id;
+      setProductTypeID(selectedId);
+    } else if (name === 'brand') {
+      const selectedBrand = brands.find(brand => brand.value === value);
+      selectedId = selectedBrand.id;
+      setBrandID(selectedId);
+    }
     setProduct({
       ...product,
       [name]: value
     });
   };
 
-  const handleImageChange = ({ fileList }) => {
-    const newImages = fileList.map(file => {
-      if (file.originFileObj) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file.originFileObj);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
-        });
-      }
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split('base64,')[1]);
+      reader.onerror = error => reject(error);
     });
+  };
 
+  const handleUpload = ({ fileList }) => {
+    const newImages = fileList.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onloadend = () => {
+          const base64Image = reader.result;
+          const [prefix, file_string] = base64Image.split(',');
+          const [firstPart] = prefix.split(';');
+          const [_, file_extension] = firstPart.split('/');
+          if (['png', 'jpeg', 'jpg', 'svg'].includes(file_extension)) {
+            const file_name = 'image';
+            resolve({ file_string, file_name, file_type: file_extension });
+          } else {
+            reject('Formato de imagen no válido. Por favor, sube una imagen PNG, JPEG, JPG o SVG.');
+          }
+        };
+      });
+    });
+  
     Promise.all(newImages)
       .then(base64Images => {
-        console.log(base64Images); // Ver las imágenes en base64 en la consola
         setImages(base64Images);
       })
-      .catch(error => console.error(error));
+      .catch(error => alert(error));
+  };
+
+  const handleImageChange = async ({ fileList }) => {
+    const newImages = await Promise.all(fileList.map(file => fileToBase64(file.originFileObj)));
+    setImages(newImages);
   };
 
   const handleSubmit = () => {
     setSubmitted(true);
-    
     if (!isButtonDisabled) {
-      const imagesWithoutPrefix = images.map(image => image.split('base64,')[1]);
-      const productWithImages = {
-        ...product,
-        images: imagesWithoutPrefix, 
+      const productCreated = {
+       name: product.name,
+      productTypeID: parseInt(productTypeID),
+      brandID,
+      price: parseFloat(product.price),
+      pictures: images,  
       };
-  
-      console.log("producto creado:", JSON.stringify(productWithImages, null, 2));
-      
+      console.log("producto creado:", productCreated);
+
+      createProduct(productCreated) 
+      .then(response => {
+        console.log(response); 
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
       handleCloseDrawer();
     }
-}
+  }
 
 const handleSearch = async (value, type_model) => {
   const results = await fetchOptions(value || '', type_model);
@@ -152,40 +190,33 @@ const handleFocus = (type_model) => {
           </Form.Item>
           
           <Form.Item label="Tipo de producto" name="type">
-          <AutoComplete
-            options={productTypes}
-            onSearch={(value) => handleSearch(value, 'product_type')}
-            onSelect={(value) => handleSelectChange(value, 'type')}
-             onFocus={() => handleFocus('product_type')}
-          />
+            <AutoComplete
+              options={productTypes}
+              onSearch={(value) => handleSearch(value, 'product_type')}
+              onSelect={(value) => handleSelectChange(value, 'type')}
+              onFocus={() => handleFocus('product_type')}
+            />
           </Form.Item>
           
           <Form.Item label="Marca" name="brand">
-          <AutoComplete
-            options={brands}
-            onSearch={(value) => handleSearch(value, 'brand')}
-            onSelect={(value) => handleSelectChange(value, 'brand')}
-            onFocus={() => handleFocus('brand')}
-          />
+            <AutoComplete
+              options={brands}
+              onSearch={(value) => handleSearch(value, 'brand')}
+              onSelect={(value) => handleSelectChange(value, 'brand')}
+              onFocus={() => handleFocus('brand')}
+            />
           </Form.Item>
           
           <Form.Item label="Precio" name="price">
             <Input name="price" onChange={handleInputChange} />
           </Form.Item>
           
-          <Form.Item label="Cantidad" name="quantity">
-            <Input name="quantity" onChange={handleInputChange} />
-          </Form.Item>
-          
-          <Form.Item label="Variante" name="variant">
-            <Input name="variant" onChange={handleInputChange} />
-          </Form.Item>
           
           <Form.Item label="Imágenes" name="images">
-            <Upload onChange={handleImageChange}>
-              <Button icon={<UploadOutlined />}>Subir Imagen</Button>
-            </Upload>
-          </Form.Item>
+          <Upload onChange={handleUpload}>
+            <Button icon={<UploadOutlined />}>Subir Imagen</Button>
+          </Upload>
+        </Form.Item>
           
           <Button type="primary" htmlType="submit" disabled={isButtonDisabled}>
             Agregar 

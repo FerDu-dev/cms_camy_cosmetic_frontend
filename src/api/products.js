@@ -24,6 +24,18 @@ export const getProducts = async () => {
   }
 };
 
+export const createProduct = async (product) => {
+  const { name, productTypeID, brandID, price, pictures } = product;
+  const response = await httpClient.post('/product/', {
+    name,
+    productTypeID,
+    brandID,
+    price,
+    pictures
+  });
+  return response.data;
+};
+
 export const getProductById = async (id) => {
   try {
     const response = await httpClient.get(`/get_products/${id}`);
@@ -33,14 +45,7 @@ export const getProductById = async (id) => {
   }
 };
 
-export const createProduct = async (product) => {
-  try {
-    const response = await httpClient.post('/create_product', product);
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-};
+
 
 export const updateProduct = async (id, product) => {
   try {
