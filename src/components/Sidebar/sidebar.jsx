@@ -3,7 +3,7 @@ import { Layout, Menu, Button, Drawer } from "antd";
 import { UserOutlined, HomeOutlined, KeyOutlined, TableOutlined, SettingOutlined } from "@ant-design/icons";
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo-makeup.webp'
-
+import { routes } from "../../containers/routing/routing";
 const { Sider } = Layout;
 
 const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
@@ -24,7 +24,25 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
         <div className='logo-container'>
           <img src={logo} width='100' height='100'/>
         </div>
-          <Menu.SubMenu key="sub1" icon={<TableOutlined />} title="Tienda">
+          {
+            routes.filter(route => route.menu).map((route, index) => (
+              route.children?
+                <Menu.SubMenu key={`sub${index}`} icon={route.icon? route.icon : null} title={route.title}>
+                  {
+                    route.children.map(child => (
+                      <Menu.Item key={'path'}>
+                        <Link style={{textDecoration:"none", color:"black"}} to={`${route.path}/${child.path}`}>{child.title}</Link>
+                      </Menu.Item>
+                    ))
+                  }
+                </Menu.SubMenu>
+              :
+              <>
+
+              </>   
+            ))
+          }
+          {/* <Menu.SubMenu key="sub1" icon={<TableOutlined />} title="Tienda">
             <Menu.Item key="1">
             <Link style={{textDecoration:"none", color:"black"}} to="/home/table-products">Inventario</Link>
             </Menu.Item>
@@ -43,7 +61,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
             <Menu.Item key="2">
             <Link style={{textDecoration:"none", color:"black"}} to="/home/product-types">Ventas</Link>
             </Menu.Item>
-          </Menu.SubMenu>
+          </Menu.SubMenu> */}
         </Menu>
       </Drawer>
       {windowWidth > 768 && (
@@ -53,9 +71,27 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
           {/* <img src={logo} width='100' height='100'/> */}
           <h3 style={{color:"#FFB6C1", fontWeight:"bold", padding:"5px"}}>Camy makeup</h3>
         </div>
-          <Menu.Item key="1" icon={<TableOutlined />}>
+        {
+            routes.filter(route => route.menu).map((route, index) => (
+              route.children && route.haveSubMenu?
+                <Menu.SubMenu key={`sub${index}`} icon={route.icon? route.icon : null} title={route.title}>
+                  {
+                    route.children.map(child => (
+                      <Menu.Item key={'path'}>
+                        <Link style={{textDecoration:"none", color:"black"}} to={`${route.path}/${child.path}`}>{child.title}</Link>
+                      </Menu.Item>
+                    ))
+                  }
+                </Menu.SubMenu>
+              :
+              <Menu.Item key={`sub${index}`} icon={route.icon? route.icon : null}>
+              <Link style={{textDecoration:"none"}} to={`${route.path}/${child.path}`}>{child.title}</Link>
+              </Menu.Item>   
+            ))
+          }
+          {/* <Menu.Item key="1" icon={<TableOutlined />}>
             <Link style={{textDecoration:"none"}} to="/home/table-products">Inventario</Link>
-          </Menu.Item>
+          </Menu.Item> */}
           {/* <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="Tienda">
             <Menu.Item key="1">
               <Link style={{textDecoration:"none"}} to="/table-products">Inventario</Link>
@@ -64,7 +100,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
               <Link style={{textDecoration:"none"}} to="/sales">Ventas</Link>
             </Menu.Item>
           </Menu.SubMenu> */}
-          <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Profiles">
+          {/* <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Profiles">
             <Menu.Item key="3">My profile</Menu.Item>
             <Menu.Item key="4">Employee</Menu.Item>
           </Menu.SubMenu>
@@ -76,7 +112,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
             <Menu.Item key="7">
             <Link style={{textDecoration:"none", color:"black"}} to="/home/product-types">Prductos</Link>
             </Menu.Item>
-          </Menu.SubMenu>
+          </Menu.SubMenu> */}
         </Menu>
       </Sider>
         

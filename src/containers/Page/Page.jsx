@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
-import AppHeader from "../Header/header";
-import Sidebar from "../Sidebar/sidebar";
-import { Layout } from 'antd'
+import Sidebar from "../../components/Sidebar/sidebar"
+import AppHeader from "../../components/Header/header";
+import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
-import photo from '../../assets/profile-photo.jpg'
+import {useState, useEffect} from 'react'
 
-const { Content } = Layout;
-
-export const Dashboard = () => {
+export const Page = ({children}) => {
     const navigate = useNavigate();
   
   
@@ -40,7 +37,6 @@ export const Dashboard = () => {
 
     const handleNavigation = (path) => {
         navigate(path);
-        console.log(user)
     };
 
     return (
@@ -59,12 +55,11 @@ export const Dashboard = () => {
               windowWidth={windowWidth} 
               />
             <div style={{ flex: 1, boxShadow: '0px 0px 5px rgba(0,0,0,0.5) inset', padding: '20px' }}>
-
+                { children}
             </div>
           </div>
         </div>
-      );
-};
+    )
+}
 
-
-  
+export default Page;
