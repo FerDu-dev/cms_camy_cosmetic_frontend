@@ -5,6 +5,7 @@ import { SalesPage } from '../../pages/SalesPage/sales-page';
 import { SettingsPage } from '../../pages/SettingsPage';
 import BrandSetting from '../../pages/BrandSetting/BrandSetting';
 import ProductTypeSetting from '../../pages/ProductTypeSetting/ProductTypeSetting';
+import Product from '../../pages/Product';
 import StorePage from '../../pages/StorePage';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -17,11 +18,20 @@ export const routes = [
     {
         path: '/login',
         element: <LoginPage />,
+        
+    },
+    {
+        path: '/producto',
+        title: 'Producto',
+        icon: <TableOutlined />,
+        menu: true,
+        element: <PrivateRoute><Page><Product /></Page></PrivateRoute>
     },
     {
         title: 'Configuracion',
         icon: <SettingOutlined />,
         menu: true,
+        haveSubMenu: true,
         element: <PrivateRoute><Page><SettingsPage /></Page></PrivateRoute>,
         path: '/setting',
         children: [
@@ -39,8 +49,8 @@ export const routes = [
                 element: <PrivateRoute> <ProductTypeSetting /></PrivateRoute>
             }
         ]
-
     },
+    
 ]
 
 

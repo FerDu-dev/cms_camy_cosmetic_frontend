@@ -37,9 +37,9 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
                   }
                 </Menu.SubMenu>
               :
-              <>
-
-              </>   
+              <Menu.Item key={`sub${index}`} icon={route.icon? route.icon : null}>
+              <Link style={{textDecoration:"none",  color:"black"}} to={`${route.path}`}>{route.title}</Link>
+              </Menu.Item> 
             ))
           }
           {/* <Menu.SubMenu key="sub1" icon={<TableOutlined />} title="Tienda">
@@ -85,7 +85,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
                 </Menu.SubMenu>
               :
               <Menu.Item key={`sub${index}`} icon={route.icon? route.icon : null}>
-              <Link style={{textDecoration:"none"}} to={`${route.path}/${child.path}`}>{child.title}</Link>
+              <Link style={{textDecoration:"none",  color:"black"}} to={`${route.path}`}>{route.title}</Link>
               </Menu.Item>   
             ))
           }

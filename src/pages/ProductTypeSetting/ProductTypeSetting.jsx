@@ -6,6 +6,7 @@ import AddProductType from '../../components/AddProductType/AddProductType';
 export const ProductTypeSetting = () => {
     const [productTypes, setProductTypes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false)
     const productsPerPage = 6;
     const columns = [
         {
@@ -21,8 +22,10 @@ export const ProductTypeSetting = () => {
         },
       ];
     const fetchProductTypes = async () => {
+        setLoading(true)
         const fetchedProductTypes = await getProductTypes(currentPage, productsPerPage); 
         setProductTypes(fetchedProductTypes.data);
+        setLoading(false)
       };
 
 
@@ -36,7 +39,7 @@ export const ProductTypeSetting = () => {
         <div>
           <h2>Tipos de productos</h2>
           <AddProductType getProductTypes={fetchProductTypes} />
-          <Table columns={columns} dataSource={productTypes} rowKey="id" style={{marginTop:"1rem"}} pagination={{current: currentPage, total: productTypes.length, pageSize: productsPerPage, onChange: (page) => setCurrentPage(page)}} />
+          <Table loading={loading} columns={columns} dataSource={productTypes} rowKey="id" style={{marginTop:"1rem"}} pagination={{current: currentPage, total: productTypes.length, pageSize: productsPerPage, onChange: (page) => setCurrentPage(page)}} />
           
         </div>
       );

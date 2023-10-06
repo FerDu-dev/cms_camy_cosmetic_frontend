@@ -9,7 +9,8 @@ export const AddBrand = ({
     const [brand, setBrand] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [brandImage, setBrandImage] = useState(null);
-    
+    const [loading, setLoading] = useState(false);
+
     const handleUpload = ({ fileList }) => {
         const file = fileList[0].originFileObj;
         const reader = new FileReader();
@@ -30,6 +31,7 @@ export const AddBrand = ({
 
       const handleBrandSubmit = async () => {
         console.log("product image:",brandImage)
+        setLoading(true)
         try {
           const newBrand = { 
             name: brand, 
@@ -37,10 +39,9 @@ export const AddBrand = ({
           }; 
           await createBrand(newBrand);
           getBrands()
-          setBrands([...brands, newBrand]);
-          setBrand('');
-          setIsModalVisible(false);
+          handleCancel()
         } catch (error) {
+          setLoading(false)
           console.log(error);
         }
       };
@@ -51,6 +52,9 @@ export const AddBrand = ({
     
       const handleCancel = () => {
         setIsModalVisible(false);
+        setBrand('');
+        setLoading(false);
+        setBrandImage(null)
       };
     
       return (
@@ -63,7 +67,9 @@ export const AddBrand = ({
                 open={isModalVisible} 
                 onOk={handleBrandSubmit} 
                 onCancel={handleCancel}
+                okButtonProps={{ disabled: !brand || !brandImage || loading }}
                 destroyOnClose={true}
+                confirmLoading={loading}
                 >
                 <Form onFinish={handleBrandSubmit} preserve={false}>
                 <Form.Item>
@@ -71,7 +77,7 @@ export const AddBrand = ({
                 </Form.Item>
                 <Form.Item>
                     <Upload accept="image/*" beforeUpload={() => false} onChange={handleUpload} maxCount={1}>
-                    <Button icon={<UploadOutlined />}>Subir imagen</Button>
+                    <Button  icon={<UploadOutlined />}>Subir imagen</Button>
                     </Upload>
                 </Form.Item>
                 </Form>

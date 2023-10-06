@@ -10,7 +10,8 @@ export const AddProductType = ({
     const [productType, setProductType] = useState('');
     const [productImage, setProductImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    
+    const [loading, setLoading] = useState(false);
+
     const handleUpload = ({ fileList }) => {
         const file = fileList[0].originFileObj;
         const reader = new FileReader();
@@ -31,16 +32,17 @@ export const AddProductType = ({
 
       const handleProductTypeSubmit = async () => {
         console.log("product image:",productImage)
+        setLoading(true)
         try {
           const newProductType = { 
             name: productType, 
             picture: productImage
           }; 
           await createProductType(newProductType);
-          setProductType('');
-          setIsModalVisible(false);
+          handleCancel()
           getProductTypes();
         } catch (error) {
+          setLoading(false)
           console.log(error);
         }
       };
@@ -51,6 +53,9 @@ export const AddProductType = ({
     
       const handleCancel = () => {
         setIsModalVisible(false);
+        setProductType('')
+        setLoading(false)
+        setProductImage(null)
       };
       
     return (
@@ -58,7 +63,15 @@ export const AddProductType = ({
             <Button type="primary" onClick={showModal}>
                 Agregar tipo de producto
             </Button>
-            <Modal title="Agregar Tipo de producto" open={isModalVisible} onOk={handleProductTypeSubmit} onCancel={handleCancel}>
+            <Modal 
+              title="Agregar Tipo de producto" 
+              open={isModalVisible} 
+              onOk={handleProductTypeSubmit} 
+              onCancel={handleCancel}
+              okButtonProps={{ disabled: !productType || !productImage || loading }}
+              destroyOnClose={true}
+              confirmLoading={loading}
+            >
               <Form onFinish={handleProductTypeSubmit}>
                 <Form.Item>
                   <Input placeholder="Tipo de producto" value={productType} onChange={(e) => setProductType(e.target.value)} />
