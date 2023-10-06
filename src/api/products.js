@@ -13,15 +13,9 @@ const simulatedProducts = [
   { id:10, name: 'lapiz', productType: 'Tipo 5', brand: 'Marca 5', quantity: 30, price: 80 },
 ];
 
-export const getProducts = async () => {
-  try {
-   
-    return simulatedProducts;
-
-  
-  } catch (e) {
-    console.log(e);
-  }
+export const getProducts = async (limit, page) => {
+  const response = await httpClient.get(`/product/?limit=${limit}&page=${page}`);
+  return response.data;
 };
 
 export const createProduct = async (product) => {

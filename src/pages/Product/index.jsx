@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from "react";
 import AddProductForm from "../../components/AddProductsForm/add-product-form";
 import ProductsFilter from "../../components/ProductsFilter/products-filter";
+import ProductsTable from "../../components/ProductsTable/products-table";
 import { getProducts } from "../../api/products";
 import { Table } from "antd";
 import { Outlet } from "react-router-dom";
@@ -35,7 +36,7 @@ export const Product = () => {
             <>
                 <AddProductForm />
                 <ProductsFilter />
-                <Table dataSource={products} columns={columns} loading={loading} />
+                <ProductsTable/>
             </>
            )
 
