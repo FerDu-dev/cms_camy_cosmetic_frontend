@@ -21,9 +21,9 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
         open={visible}
       >
         <Menu theme="white" mode="inline" defaultSelectedKeys={["1"]} style={{height:"100vh", backgroundColor:"#FAEBD7"}}>
-        <div className='logo-container'>
+        {/* <div className='logo-container'>
           <img src={logo} width='100' height='100'/>
-        </div>
+        </div> */}
           <Menu.SubMenu key="sub1" icon={<TableOutlined />} title="Tienda">
             <Menu.Item key="1">
             <Link style={{textDecoration:"none", color:"black"}} to="/home/table-products">Inventario</Link>
