@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Form, Input, Button, Modal, Table, Upload, message } from 'antd';
+import { Form, Input, Button, Modal, Table, Upload, message , Spin} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { getBrands, createBrand } from '../../api/brands&types'; 
 
 export const BrandForm = () => {
+  const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
   const [brand, setBrand] = useState('');
   const [brandImage, setBrandImage] = useState(null);
   const [brands, setBrands] = useState([]);
@@ -12,13 +14,16 @@ export const BrandForm = () => {
   const brandsPerPage = 6;
 
   useEffect(() => {
-    const fetchBrands = async () => {
-      const fetchedBrands = await getBrands(currentPage, brandsPerPage); 
-      console.log(fetchedBrands)
-      setBrands(fetchedBrands.data);
-    };
     fetchBrands();
   }, [currentPage]);
+
+  const fetchBrands = async () => {
+    setIsLoading(true);
+    const fetchedBrands = await getBrands(currentPage, brandsPerPage); 
+    console.log(fetchedBrands)
+    setBrands(fetchedBrands.data);
+    setIsLoading(false);
+  };
   
 
   const handleUpload = ({ fileList }) => {
@@ -44,19 +49,23 @@ export const BrandForm = () => {
   
 
   const handleBrandSubmit = async () => {
-    console.log("product image:",brandImage)
+    setIsLoading(true);
     try {
       const newBrand = { 
         name: brand, 
         picture: brandImage
       }; 
       await createBrand(newBrand);
+      await fetchBrands();
       setBrands([...brands, newBrand]);
       setBrand('');
+      setBrandImage(null); 
       setIsModalVisible(false);
+      closeModalAndResetForm();
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
   
   
@@ -69,6 +78,13 @@ export const BrandForm = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const closeModalAndResetForm = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+    setBrand('');
+    setBrandImage(null);
   };
 
   const columns = [
@@ -91,15 +107,24 @@ export const BrandForm = () => {
       <Button type="primary" onClick={showModal}>
         Agregar nueva marca
       </Button>
-      <Table columns={columns} dataSource={brands} rowKey="id" style={{marginTop:"1rem"}} pagination={{current: currentPage, total: brands.length, pageSize: brandsPerPage, onChange: (page) => setCurrentPage(page)}} />
+      <Spin spinning={isLoading}> {/* Agrega el loading a la tabla */}
+        <Table 
+          columns={columns} 
+          dataSource={brands} 
+          rowKey="id" 
+          style={{marginTop:"1rem"}} 
+          pagination={{current: currentPage, total: brands.length, pageSize: brandsPerPage, onChange: (page) => setCurrentPage(page)}} />
+      </Spin>
       <Modal 
-        title="Agregar Marca" 
+       title="Agregar Marca" 
         open={isModalVisible} 
         onOk={handleBrandSubmit} 
-        onCancel={handleCancel}
+        onCancel={closeModalAndResetForm}
         destroyOnClose={true}
+        okButtonProps={{ disabled: !brand || !brandImage }}
+        confirmLoading={isLoading}
         >
-        <Form onFinish={handleBrandSubmit} preserve={false}>
+        <Form form={form} onFinish={handleBrandSubmit} > 
           <Form.Item>
             <Input placeholder="Marca" value={brand} onChange={(e) => setBrand(e.target.value)} />
           </Form.Item>
