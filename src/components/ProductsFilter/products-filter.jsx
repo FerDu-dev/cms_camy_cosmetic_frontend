@@ -11,14 +11,14 @@ export const ProductsFilter = ({ handleSearch }) => {
   const [brands, setBrands] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 100]);
 
+  const fetchProductTypesAndBrands = async () => {
+    const fetchedProductTypes = await getProductTypes();
+    const fetchedBrands = await getBrands();
+    setProductTypes(fetchedProductTypes);
+    setBrands(fetchedBrands);
+  };
   useEffect(() => {
-    const fetchProductTypesAndBrands = async () => {
-      const fetchedProductTypes = await getProductTypes();
-      const fetchedBrands = await getBrands();
-      setProductTypes(fetchedProductTypes);
-      setBrands(fetchedBrands);
-    };
-    fetchProductTypesAndBrands();
+    // fetchProductTypesAndBrands();
   }, []);
   
   const handlePriceRange = (value) => {

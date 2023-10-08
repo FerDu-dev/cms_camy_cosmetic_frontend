@@ -28,6 +28,9 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
                 <Menu.SubMenu key={`sub${index}`} icon={route.icon? route.icon : null} title={route.title}>
                   {
                     route.children.map(child => (
+                      child.childrenElement?
+                      child.childrenElement
+                      :
                       <Menu.Item key={'path'}>
                         <Link style={{textDecoration:"none", color:"black"}} to={`${route.path}/${child.path}`}>{child.title}</Link>
                       </Menu.Item>
@@ -40,26 +43,6 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
               </Menu.Item> 
             ))
           }
-          {/* <Menu.SubMenu key="sub1" icon={<TableOutlined />} title="Tienda">
-            <Menu.Item key="1">
-            <Link style={{textDecoration:"none", color:"black"}} to="/home/table-products">Inventario</Link>
-            </Menu.Item>
-            <Menu.Item key="2">
-            <Link style={{textDecoration:"none", color:"black"}} to="/home/sales">Ventas</Link>
-            </Menu.Item>
-          </Menu.SubMenu>
-          <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Profiles">
-            <Menu.Item key="3">My profile</Menu.Item>
-            <Menu.Item key="4">Employee</Menu.Item>
-          </Menu.SubMenu>
-          <Menu.SubMenu key="sub1" icon={<SettingOutlined />} title="Configuracion">
-            <Menu.Item key="1">
-            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-brands">Inventario</Link>
-            </Menu.Item>
-            <Menu.Item key="2">
-            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-types">Ventas</Link>
-            </Menu.Item>
-          </Menu.SubMenu> */}
         </Menu>
       </Drawer>
       {windowWidth > 768 && (
@@ -75,6 +58,9 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
                 <Menu.SubMenu key={`sub${index}`} icon={route.icon? route.icon : null} title={route.title}>
                   {
                     route.children.map(child => (
+                      child.childrenElement?
+                      child.childrenElement
+                      :
                       <Menu.Item key={'path'}>
                         <Link style={{textDecoration:"none", color:"black"}} to={`${route.path}/${child.path}`}>{child.title}</Link>
                       </Menu.Item>
@@ -87,30 +73,6 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
               </Menu.Item>   
             ))
           }
-          {/* <Menu.Item key="1" icon={<TableOutlined />}>
-            <Link style={{textDecoration:"none"}} to="/home/table-products">Inventario</Link>
-          </Menu.Item> */}
-          {/* <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="Tienda">
-            <Menu.Item key="1">
-              <Link style={{textDecoration:"none"}} to="/table-products">Inventario</Link>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Link style={{textDecoration:"none"}} to="/sales">Ventas</Link>
-            </Menu.Item>
-          </Menu.SubMenu> */}
-          {/* <Menu.SubMenu key="sub2" icon={<UserOutlined />} title="Profiles">
-            <Menu.Item key="3">My profile</Menu.Item>
-            <Menu.Item key="4">Employee</Menu.Item>
-          </Menu.SubMenu>
-
-          <Menu.SubMenu key="sub3" icon={<SettingOutlined />} title="Configuracion">
-            <Menu.Item key="6">
-            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-brands">Marcas</Link>
-            </Menu.Item>
-            <Menu.Item key="7">
-            <Link style={{textDecoration:"none", color:"black"}} to="/home/product-types">Prductos</Link>
-            </Menu.Item>
-          </Menu.SubMenu> */}
         </Menu>
       </Sider>
         

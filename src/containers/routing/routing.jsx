@@ -3,6 +3,7 @@ import { LoginPage } from '../../pages/LoginPage/LoginPage';
 import { HomePage } from '../../pages/Home/HomePage';
 import { SalesPage } from '../../pages/SalesPage/sales-page';
 import { SettingsPage } from '../../pages/SettingsPage';
+import AddStoreInMenu from '../../components/AddStoreInMenu';
 import BrandSetting from '../../pages/BrandSetting/BrandSetting';
 import ProductTypeSetting from '../../pages/ProductTypeSetting/ProductTypeSetting';
 import Product from '../../pages/Product';
@@ -11,6 +12,9 @@ import StoreEmployees from '../../pages/StoreEmployees';
 import StoreSales from '../../pages/StoreSales';
 import StoreStock from '../../pages/StoreStock';
 import StoreConfiguration from '../../pages/StoreConfiguration';
+import { Users } from '../../pages/Users';
+import UserDetail from '../../components/UserDetail';
+
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ModalNotLogin } from '../../components/Modals/Modals';
@@ -63,6 +67,12 @@ export const routes = [
                 element: <StoreConfiguration/>,
                 subMenu: true,
             },
+            {
+                title: 'Anadir Tienda',
+                notRouting: true,
+                subMenu: true,
+                childrenElement: <AddStoreInMenu />
+            }
         ]
         
     },
@@ -72,7 +82,7 @@ export const routes = [
         menu: true,
         haveSubMenu: true,
         element: <PrivateRoute><Page><SettingsPage /></Page></PrivateRoute>,
-        path: '/setting',
+        path: '/configuracion',
         children: [
             {
                 title: 'Marca',
@@ -89,7 +99,19 @@ export const routes = [
             }
         ]
     },
-    
+    {
+        path: '/usuario',
+        icon: <UserOutlined />,
+        title: 'Usuarios',
+        menu: true,
+        element:<PrivateRoute><Page> <Users /></Page></PrivateRoute>,
+        children: [
+            {
+                path: ':userID',
+                element: <UserDetail />
+            }
+        ]
+    },
 ]
 
 
@@ -109,7 +131,7 @@ export const Routing = () => {
                         
                             <Route path={route.path} element={route.element}>
                                 { 
-                                    route.children.map(routeChild => (
+                                    route.children.filter(child => !child.notRouting).map(routeChild => (
                                     <Route 
                                         path={routeChild.path} 
                                         element={routeChild.element} 

@@ -8,7 +8,9 @@ import { createProduct } from '../../api/products';
 
 const { Option } = Select;
 
-export const AddProductForm = () => {
+export const AddProductForm = ({
+  fetchProducts = () => {}
+}) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [product, setProduct] = useState({
     name: '',
@@ -139,7 +141,7 @@ export const AddProductForm = () => {
     setImages(newImages);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit =async () => {
     setSubmitted(true);
     if (!isButtonDisabled) {
       const productCreated = {
@@ -151,14 +153,8 @@ export const AddProductForm = () => {
       };
       console.log("producto creado:", productCreated);
 
-      createProduct(productCreated) 
-      .then(response => {
-        console.log(response); 
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
+      await createProduct(productCreated) 
+      fetchProducts()
       handleCloseDrawer();
     }
   }

@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { Layout, Tooltip, Dropdown, Menu } from 'antd';
 import { LogoutOutlined, ShopOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { UserOutlined, VideoCameraOutlined, UploadOutlined, MenuOutlined } from "@ant-design/icons";
+import { getStores } from '../../api/store';
 import './header.css'
 
 const text = <span>Cerrar sesion</span>;
@@ -9,6 +11,7 @@ const textTienda = <span>Cambiar Tienda</span>;
 const { Header } = Layout;
 
 export const AppHeader = ({showDrawer, windowWidth}) => {
+  const [stores, setStores] = useState([])
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,16 +19,31 @@ export const AppHeader = ({showDrawer, windowWidth}) => {
     navigate('/login');
   };
 
+  useEffect(() => {
+    fetchStores()
+  }, [])
+
   const handleStoreChange = (e) => {
-   
-    console.log(e)
+    const selectedStore = stores.filter(store => store.id == e.key)
+    if (selectedStore.length) localStorage.setItem('selectedStore', JSON.stringify(selectedStore[0]))
+    window.location.reload()
   };
+
+  const fetchStores = async () => {
+    const response = await getStores(1, 20);
+    setStores(response.data)
+    console.log(response)
+  }
 
   const storeMenu = (
     <Menu onClick={handleStoreChange}>
-      <Menu.Item key="store1">Tienda 1</Menu.Item>
-      <Menu.Item key="store2">Tienda 2</Menu.Item>
-      <Menu.Item key="store3">Tienda 3</Menu.Item>
+        {
+          stores.map(store => (
+            <Menu.Item onClick={(e) => handleStoreChange} key={store.id}>
+                {`${store.name} - ${store.city}`}
+            </Menu.Item>
+          ))
+        }
     </Menu>
   );
 
@@ -34,7 +52,7 @@ export const AppHeader = ({showDrawer, windowWidth}) => {
       {windowWidth <= 768 && (
         <MenuOutlined style={{ color: 'black', fontSize: '20px', marginRight:"2rem" }} onClick={showDrawer}/>
       )}
-      <Tooltip placement="bottom" title={textTienda}> 
+      <Tooltip placement="left" title={textTienda}> 
       <Dropdown overlay={storeMenu} placement="bottomCenter" trigger={['click']}>
         <ShopOutlined style={{ color: 'black', fontSize: '25px', marginRight:"2rem" }} />
       </Dropdown>
