@@ -8,6 +8,7 @@ import { createProduct } from '../../api/products';
 
 const { Option } = Select;
 
+
 export const AddProductForm = ({
   fetchProducts = () => {}
 }) => {
@@ -74,6 +75,7 @@ export const AddProductForm = ({
       variant: false
     });
     setSubmitted(false);
+    
   };
 
   const handleInputChange = (e) => {
@@ -151,7 +153,6 @@ export const AddProductForm = ({
       price: parseFloat(product.price),
       pictures: images,  
       };
-      console.log("producto creado:", productCreated);
 
       await createProduct(productCreated) 
       fetchProducts()

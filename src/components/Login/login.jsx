@@ -5,6 +5,8 @@ import logo from '../../assets/logo-makeup.webp'
 import { emptyFields } from '../../helpers/constantFunctions';
 import { login, verifyAdmin } from '../../api/auth';
 import { useNavigate } from 'react-router-dom/dist';
+import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -29,7 +31,7 @@ export const Login = () => {
             try {
                 const user = await login({ email, password });
                 if (user) {
-                    navigate('/home');
+                    navigate('/producto');
                 }
             } catch (error) {
                 console.log(error.message);

@@ -32,7 +32,7 @@ export const createProduct = async (product) => {
 
 export const getProductById = async (id) => {
   try {
-    const response = await httpClient.get(`/get_products/${id}`);
+    const response = await httpClient.get(`/product/?productID=${id}`);
     return response.data;
   } catch (e) {
     console.log(e);
