@@ -1,7 +1,14 @@
 import httpClient from "../config/httpClient";
 
-export const getProducts = async (limit, page) => {
-  const response = await httpClient.get(`/product/?limit=${limit}&page=${page}`);
+export const getProducts = async (limit, page, filter = null) => {
+  let url = `/product/?limit=${limit}&page=${page}`
+  if (filter) {
+    if (filter.search) url+=`&search=${filter.search}`
+    if (filter.brand_filter) url+=`&brand_filter=${filter.brand_filter}`
+    if (filter.product_type_filter) url+=`&product_type_filter=${filter.product_type_filter}`
+    if (filter.priceFilter) url+=`&price_filter=${filter.priceFilter}`
+  }
+  const response = await httpClient.get(url);
   return response.data;
 };
 

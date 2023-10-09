@@ -21,6 +21,14 @@ export const Product = () => {
     const location = useLocation();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
+    const [areVariantProducts, setAreVariantProducts] = useState(false)
+    const [search, setSearch] = useState('');
+    const [productTypeFilter, setProductTypeFilter] = useState(null)
+    const [brandFilter, setBrandFilter] = useState(null)
+    const [priceFilter, setPriceFilter] = useState({
+      price: null,
+      range: 'greater',
+    })
     const [view, setView] = useState('detail');
     const columns = [
         {
@@ -64,7 +72,16 @@ export const Product = () => {
 
       const fetchProducts = async () => {
         setLoading(true)
-        const response = await getProducts(limit, currentPage)
+        const filters = {};
+        if (search) filters.search = search;
+        if (brandFilter) filters.brand_filter = brandFilter
+        if (productTypeFilter) filters.product_type_filter = productTypeFilter;
+        if (priceFilter.price) filters.priceFilter = JSON.stringify(priceFilter);
+        console.log(filters)
+        const response = search || brandFilter || productTypeFilter || priceFilter.price ?  
+        await getProducts(limit, currentPage, filters)
+        :
+        await getProducts(limit, currentPage)
         console.log(response.data)
         setProducts(response.data.map(product => (
           { ...product, key: product.productID}
@@ -101,7 +118,19 @@ export const Product = () => {
            (
             <>
                 <AddProductForm fetchProducts={fetchProducts} />
-                <ProductsFilter />
+                <ProductsFilter 
+                  areVariantProducts={areVariantProducts}
+                  setAreVariantProducts={setAreVariantProducts}
+                  search={search}
+                  setSearch={setSearch}
+                  productTypeFilter={productTypeFilter}
+                  setProductTypeFilter={setProductTypeFilter}
+                  brandFilter={brandFilter}
+                  setBrandFilter={setBrandFilter}
+                  priceFilter={priceFilter}
+                  setPriceFilter={setPriceFilter}
+                  fetchProducts={fetchProducts}
+                />
                 <Table style={{marginBlock: '1rem'}} loading={loading} dataSource={products} columns={columns} pagination={false} /> 
                 <Pagination total={total} pageSize={limit} current={currentPage} onChange={(handlePage)} />
                 <Modal 

@@ -1,53 +1,102 @@
 import React, { useState, useEffect } from 'react';
 import { getProductTypes, getBrands } from '../../api/brands&types';
-import { Form, Row, Col, Select, Input, Slider, InputNumber } from 'antd';
+import { Form, Select, Input, InputNumber, Switch, Button} from 'antd';
 
 
 const { Option } = Select;
 
-export const ProductsFilter = ({ handleSearch }) => {
+export const ProductsFilter = ({  
+  areVariantProducts, 
+  setAreVariantProducts = () => {},
+  search, 
+  setSearch = () => {},
+  productTypeFilter,
+  setProductTypeFilter = () => {},
+  brandFilter,
+  setBrandFilter = () => {},
+  priceFilter = {price: null, range: 'greater'},
+  setPriceFilter = () => {},
+  fetchProducts = () => {}
+}) => {
  
   const [productTypes, setProductTypes] = useState([]);
   const [brands, setBrands] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 100]);
 
   const fetchProductTypesAndBrands = async () => {
-    const fetchedProductTypes = await getProductTypes();
-    const fetchedBrands = await getBrands();
-    setProductTypes(fetchedProductTypes);
-    setBrands(fetchedBrands);
+    const fetchedProductTypes = await getProductTypes(1, 20);
+    const fetchedBrands = await getBrands(1, 20);
+    console.log('fetched', fetchedProductTypes)
+    setProductTypes(fetchedProductTypes.data.map(productType => ({
+      value: productType.productTypeID,
+      label: productType.productTypeName
+    })))
+    setBrands(fetchedBrands.data.map(brand => ({
+      value: brand.id,
+      label: brand.name
+    })))
+    // setProductTypes(fetchedProductTypes);
+    // setBrands(fetchedBrands);
   };
   useEffect(() => {
-    // fetchProductTypesAndBrands();
+    fetchProductTypesAndBrands();
   }, []);
   
   const handlePriceRange = (value) => {
-    setPriceRange(value);
+    console.log(value)
+   setPriceFilter({...priceFilter, price: parseFloat(value)})
     setFilters({ ...filters, priceRange: value });
   };
 
   return (
     <Form layout="inline">
       <Form.Item label="Search">
-        <Input onChange={handleSearch} />
+        <Input value={search} onChange={(e) => setSearch(e.target.value)} />
       </Form.Item>
-      <Form.Item label="Type">
-        <Select placeholder="Select a type">
-          {productTypes && productTypes.map((type) => (
-            <Option key={type.id} value={type.id}>{type.name}</Option>
+      <Form.Item label="Tipo de producto">
+        <Select value={productTypeFilter} onChange={setProductTypeFilter}>
+          <Option value={null}>
+            Escoge un tipo de producto
+          </Option>
+          {productTypes && productTypes.map((productType) => (
+            <Option key={productType.value} value={productType.value}>{productType.label}</Option>
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Brand">
-        <Select placeholder="Select a brand">
+      <Form.Item label="Marca">
+        <Select 
+          value={brandFilter} 
+          onChange={setBrandFilter} 
+        >
+          <Option value={null}>
+            Escoge una marca
+          </Option>
           {brands && brands.map((brand) => (
-            <Option key={brand.id} value={brand.id}>{brand.name}</Option>
+            <Option key={brand.value} value={brand.value}>{brand.label}</Option>
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Price Range">
-        <InputNumber min={0} max={100} onChange={handlePriceRange} />
+      <Form.Item label="Precio">
+        {
+          priceFilter.price?
+            <Select value={priceFilter.range} onChange={(range) => setPriceFilter({...priceFilter, range})}>
+                <Option value={'greater'}>Mayor</Option>
+                <Option value={'greaterOrEql'}>Mayor o igual</Option>
+                <Option value={'eql'}>igual</Option>
+                <Option value={'lessOrEql'}>Menor o igual</Option>
+                <Option value={'less'}>Menor</Option>
+            </Select>
+          :
+          null
+        }
+        <InputNumber value={priceFilter.price} placeholder='precio'  onChange={handlePriceRange} />
       </Form.Item>
+      <Form.Item label='Variante de productos'>
+        <Switch checked={areVariantProducts} onChange={(checked) => setAreVariantProducts(checked)}/>
+      </Form.Item>
+      <Button onClick = {() => fetchProducts()}>
+        Buscar
+      </Button>
     </Form> 
   );
 };
