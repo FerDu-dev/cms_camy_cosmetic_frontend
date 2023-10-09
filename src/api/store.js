@@ -28,3 +28,16 @@ export const updateStore = async (body) => {
         console.log(e)
     }
 }
+
+export const getUsersFromStore = async (storeID) => {
+    try {
+        const response = await httpClient.get(`/store/users/?storeID=${storeID}`)
+        return response.data
+    } catch(e) {
+        console.log(e);
+        return {
+            'data': [],
+            'error': true
+        }
+    }
+}

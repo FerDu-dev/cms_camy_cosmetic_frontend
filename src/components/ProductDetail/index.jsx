@@ -47,16 +47,16 @@ const ProductDetail = ({ product, view, setView }) => {
     {view === 'detail' ? (
     <div style={{paddingLeft:"1rem"}}>
         <div style={{display:"flex", flexDirection:"row", alignItems:"center"}}>
-            <span style={{fontSize:"16px"}}>Nombre de producto:</span>
+            <span style={{fontSize:"16px"}}>Nombre del producto:</span>
             <h1 style={{fontSize:"16px", marginTop:"10px", marginLeft:"10px"}} > {product.name}</h1>
         </div>
-      <span style={{ fontSize:"16px"}}>Imagenes del producto:</span>
+      <span style={{ fontSize:"16px"}}>Imagenes:</span>
       {productById && productById.productPictures && (
         <PhotosProduct productById={productById}/>
         )}
     
-      <Descriptions title="Product Info" items={itemsInfo} />
-      <h1 style={{fontSize:"16px", marginBottom:"2rem"}}>Variante:</h1>
+      <Descriptions title="Informacion" items={itemsInfo} />
+      <h1 style={{fontSize:"16px", marginBottom:"2rem"}}>Variantes:</h1>
       <Button onClick={() => setView('form')}>Agregar Variante</Button>
       {productById && productById.productVariants && (
         <ProductVariants variants={productById.productVariants} />

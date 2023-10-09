@@ -17,3 +17,4 @@ export const getUsers = async (page, limit) => {
         console.log(e)
     }
 }
+
