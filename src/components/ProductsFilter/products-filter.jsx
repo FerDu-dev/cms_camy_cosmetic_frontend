@@ -23,6 +23,14 @@ export const ProductsFilter = ({
   const [brands, setBrands] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 100]);
 
+  const layout = {
+    labelCol: { xs: { span: 24 }, sm: { span: 12 }, md: { span: 8 }, lg: { span: 8 } },
+    wrapperCol: { xs: { span: 24 }, sm: { span: 12 }, md: { span: 12 }, lg: { span: 12 } }
+}
+const tailLayout = {
+    wrapperCol: { xs: { span: 24 }, sm: { span: 12, offset: 12 }, md: { span: 12, offset: 8 }, lg: { span: 12, offset: 8 } }
+};
+
   const fetchProductTypesAndBrands = async () => {
     const fetchedProductTypes = await getProductTypes(1, 20);
     const fetchedBrands = await getBrands(1, 20);
@@ -35,8 +43,6 @@ export const ProductsFilter = ({
       value: brand.id,
       label: brand.name
     })))
-    // setProductTypes(fetchedProductTypes);
-    // setBrands(fetchedBrands);
   };
   useEffect(() => {
     fetchProductTypesAndBrands();
@@ -49,7 +55,7 @@ export const ProductsFilter = ({
   };
 
   return (
-    <Form layout="inline">
+    <Form>
       <Form.Item label="Search">
         <Input value={search} onChange={(e) => setSearch(e.target.value)} />
       </Form.Item>
