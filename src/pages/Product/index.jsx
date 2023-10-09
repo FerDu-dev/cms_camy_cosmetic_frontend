@@ -101,7 +101,7 @@ export const Product = () => {
             <>
                 <AddProductForm fetchProducts={fetchProducts} />
                 <ProductsFilter />
-                <Table loading={loading} dataSource={products} columns={columns} pagination={false} /> 
+                <Table style={{marginBlock: '1rem'}} loading={loading} dataSource={products} columns={columns} pagination={false} /> 
                 <Pagination total={total} pageSize={limit} current={currentPage} onChange={(handlePage)} />
                 <Modal 
                   title="Detalles del producto" 
