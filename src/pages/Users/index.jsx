@@ -3,12 +3,13 @@ import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import AddUser from "../../components/AddUser";
 import { getUsers } from "../../api/user";
-import { Table } from "antd";
+import { Table, Pagination } from "antd";
 export const Users = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(8)
+    const [changedPage, setChangedPage] = useState(false)
+    const [limit, setLimit] = useState(6)
     const [total, setTotal] = useState(0)
 
     const location = useLocation()
@@ -54,17 +55,37 @@ export const Users = () => {
         setLoading(false)
     }
 
+    const handlePage = (page) => {
+        setCurrentPage(page)
+        setChangedPage(true)
+      }
+
     useEffect(() => {
         callUsers()
     }, [])
     
+    useEffect(() => {
+        if (changedPage) {
+            callUsers()
+            setChangedPage(false)
+        }
+    }, [changedPage])
+
     return (    
         <>
             {
                 location.pathname == '/usuario'?
                 (<>
                     <AddUser />
-                    <Table style={{marginTop: '1rem'}} loading={loading} dataSource={users} columns={columns} />
+                    <Table 
+                        style={{marginBlock: '1rem'}} 
+                        loading={loading}
+                         dataSource={users} 
+                         columns={columns} 
+                        pagination={false}
+
+                    />
+                    <Pagination total={total} pageSize={limit} current={currentPage} onChange={handlePage}/>
                 </>)
                 :
                 <Outlet />

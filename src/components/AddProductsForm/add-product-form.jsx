@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import {emptyFields} from '../../helpers/constantFunctions'
 import fetchOptions from '../../api/autocomplete';
 import { createProduct } from '../../api/products';
+import TextArea from 'antd/es/input/TextArea';
 
 const { Option } = Select;
 
@@ -27,6 +28,7 @@ export const AddProductForm = ({
   const [validation, setValidation] = useState({name: false, type: false, brand: false, price: false, quantity: false, variant: false});
   const [submitted, setSubmitted] = useState(false);
   const [options, setOptions] = useState([]);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchProductTypesAndBrands = async () => {
@@ -40,15 +42,15 @@ export const AddProductForm = ({
 
   useEffect(() => {
     const fieldsAreValid = emptyFields(product);
-    setIsButtonDisabled(!fieldsAreValid);
-    if (submitted) {
-      setValidation({
-        name: !product.name,
-        type: !product.type,
-        brand: !product.brand,
-        price: !product.price,
-      });
-    }
+    // setIsButtonDisabled(!fieldsAreValid);
+    // if (submitted) {
+    //   setValidation({
+    //     name: !product.name,
+    //     type: !product.type,
+    //     brand: !product.brand,
+    //     price: !product.price,
+    //   });
+    // }
   }, [product, submitted]);
 
   const handleOpenDrawer = () => {
@@ -74,6 +76,7 @@ export const AddProductForm = ({
       variant: false
     });
     setSubmitted(false);
+    form.resetFields();
   };
 
   const handleInputChange = (e) => {
@@ -141,14 +144,16 @@ export const AddProductForm = ({
     setImages(newImages);
   };
 
-  const handleSubmit =async () => {
-    setSubmitted(true);
-    if (!isButtonDisabled) {
+  const handleSubmit =async (values) => {
+    setSubmitted(true)
+    const { name, price, commentary } = values
+    if (true || !isButtonDisabled) {
       const productCreated = {
-       name: product.name,
+      name,
       productTypeID: parseInt(productTypeID),
       brandID,
-      price: parseFloat(product.price),
+      commentary: values.commentary,
+      price: parseFloat(price),
       pictures: images,  
       };
       console.log("producto creado:", productCreated);
@@ -180,9 +185,13 @@ const handleFocus = (type_model) => {
       </Button>
       
       <Drawer title="Agregar un producto" placement="right" onClose={handleCloseDrawer} open={drawerOpen}>
-        <Form layout="vertical" onFinish={handleSubmit}>
+        <Form 
+          layout="vertical" 
+          onFinish={handleSubmit} 
+          form={form}
+        >
           <Form.Item label="Nombre del producto" name="name">
-            <Input name="name" onChange={handleInputChange} />
+            <Input />
           </Form.Item>
           
           <Form.Item label="Tipo de producto" name="type">
@@ -204,7 +213,11 @@ const handleFocus = (type_model) => {
           </Form.Item>
           
           <Form.Item label="Precio" name="price">
-            <Input name="price" onChange={handleInputChange} />
+            <Input />
+          </Form.Item>
+
+          <Form.Item label='Comentarios' name='commentary'>
+            <TextArea />
           </Form.Item>
           
           
@@ -214,7 +227,7 @@ const handleFocus = (type_model) => {
           </Upload>
         </Form.Item>
           
-          <Button type="primary" htmlType="submit" disabled={isButtonDisabled}>
+          <Button type="primary" htmlType="submit" disabled={false && isButtonDisabled}>
             Agregar 
           </Button>
         </Form>

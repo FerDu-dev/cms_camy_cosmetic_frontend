@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form, Input, Upload, Select, Modal } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { createUser } from "../../api/user";
-
+import { getStores } from "../../api/store";
 export const AddUser = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
@@ -16,6 +16,28 @@ export const AddUser = () => {
     const [storeOptions, setStoreOptions] = useState([])
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem('storeOptions')) {
+            console.log(localStorage.getItem('storeOptions'))
+            const stores = JSON.parse(localStorage.getItem('storeOptions'))
+            console.log(stores)
+            setStoreOptions(stores.map(store => ({
+                value: store.id,
+                label: `${store.name} - ${store.city}`
+            })))
+            
+        } else fetchStores() 
+    }, [])
+
+    const fetchStores = async () => {
+        const response = await getStores(1, 20);
+        localStorage.setItem('storeOptions', JSON.stringify(response.data))
+        setStoreOptions(response.data.map(store => ({
+            value: store.id,
+            label: `${store.name} - ${store.city}`
+        })))
+    }
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -108,7 +130,7 @@ export const AddUser = () => {
                         <Form.Item label='Tienda'>
                             <Select
                                 value={storeID}
-                                onChange={(value) => setRole(value)}
+                                onChange={(value) => setStoreID(value)}
                             >
                                 <Select.Option value={null}>
                                     Seleccione una tienda

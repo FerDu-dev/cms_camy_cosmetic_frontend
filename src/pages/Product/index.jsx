@@ -3,13 +3,14 @@ import AddProductForm from "../../components/AddProductsForm/add-product-form";
 import ProductsFilter from "../../components/ProductsFilter/products-filter";
 import ProductsTable from "../../components/ProductsTable/products-table";
 import { getProducts } from "../../api/products";
-import { Table } from "antd";
+import { Table, Pagination } from "antd";
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 export const Product = () => {
     const [products, setProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(8);
+    const [changedPage, setChangedPage] = useState(false);
+    const [limit, setLimit] = useState(6);
     const [loading, setLoading] = useState(false)
     const [total, setTotal] = useState(0)
     const location = useLocation();
@@ -52,13 +53,25 @@ export const Product = () => {
         setProducts(response.data.map(product => (
           { ...product, key: product.productID}
         )))
-        setTotal(response.data.total)
+        setTotal(response.total)
         setLoading(false)
+      }
+
+      const handlePage = (page) => {
+        setCurrentPage(page)
+        setChangedPage(true)
       }
 
       useEffect(() => {
         fetchProducts()
       }, [])
+
+      useEffect(() => {
+        if (changedPage) {
+          fetchProducts();
+          setChangedPage(false)
+        }
+      }, [changedPage])
     return (
         <>
           {location.pathname === '/producto'?
@@ -66,7 +79,8 @@ export const Product = () => {
             <>
                 <AddProductForm fetchProducts={fetchProducts} />
                 <ProductsFilter />
-                <Table loading={loading} dataSource={products} columns={columns} />
+                <Table loading={loading} dataSource={products} columns={columns} pagination={false} />
+                <Pagination total={total} pageSize={limit} current={currentPage} onChange={(handlePage)} />
             </>
            )
 

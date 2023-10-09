@@ -22,6 +22,7 @@ import PrivateRoute from './private-routes';
 import Page from '../Page/Page';
 import { UserOutlined, HomeOutlined, KeyOutlined, TableOutlined, SettingOutlined, ShopOutlined } from "@ant-design/icons";
 
+const selectedStore = localStorage.getItem('selectedStore')
 export const routes = [
     {
         path: '/login',
@@ -47,25 +48,25 @@ export const routes = [
                 title: 'Inventario',
                 path: 'inventario',
                 element: <StoreStock/>,
-                subMenu: true,
+                subMenu: selectedStore,
             },
             {
                 title: 'Ventas',
                 path: 'ventas',
                 element: <StoreSales />,
-                subMenu: true,
+                subMenu:selectedStore,
             },
             {
                 title: 'Empleados',
                 path: 'empleados',
                 element: <StoreEmployees />,
-                subMenu: true,
+                subMenu: selectedStore,
             },
             {
                 title: 'Configuracion',
                 path: 'configuracion',
                 element: <StoreConfiguration/>,
-                subMenu: true,
+                subMenu: selectedStore,
             },
             {
                 title: 'Anadir Tienda',
