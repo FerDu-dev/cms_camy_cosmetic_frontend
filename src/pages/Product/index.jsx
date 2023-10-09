@@ -1,16 +1,11 @@
 import React, { useState, useEffect} from "react";
-import { Modal } from 'antd';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import AddProductForm from "../../components/AddProductsForm/add-product-form";
 import ProductsFilter from "../../components/ProductsFilter/products-filter";
 import ProductDetail from "../../components/ProductDetail";
 import ProductsTable from "../../components/ProductsTable/products-table";
 import { getProducts } from "../../api/products";
-<<<<<<< HEAD
-import { Table, Button } from "antd";
-=======
-import { Table, Pagination } from "antd";
->>>>>>> 02996a71d521f0a90ffca0af6d7a148b1deb8b0d
+import { Table, Button, Pagination, Modal } from "antd";
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
