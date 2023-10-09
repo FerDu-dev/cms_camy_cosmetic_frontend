@@ -1,11 +1,11 @@
 import React, { useState, useEffect} from "react";
-import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import AddProductForm from "../../components/AddProductsForm/add-product-form";
 import ProductsFilter from "../../components/ProductsFilter/products-filter";
 import ProductDetail from "../../components/ProductDetail";
 import ProductsTable from "../../components/ProductsTable/products-table";
 import { getProducts } from "../../api/products";
-import { Table, Button, Pagination, Modal } from "antd";
+import { Table, Button, Pagination, Modal, Tooltip } from "antd";
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -52,7 +52,8 @@ export const Product = () => {
           dataIndex: 'key',
           render: (key) => (
             <span>
-              <EyeOutlined style={{ color: 'blue', marginRight:'5px' }} onClick={() => handleView(key)} />
+              <Tooltip title='Ver detalle' ><EyeOutlined style={{ color: 'blue', marginRight:'5px' }} onClick={() => handleView(key)} /></Tooltip>
+              <Tooltip title={'Agregar a tienda'}><PlusOutlined style={{cursor: 'pointer', marginInline:'2px'}} /></Tooltip>
               <EditOutlined style={{ color: 'green', marginRight:'5px' }} onClick={() => handleEdit(key)} />
               <DeleteOutlined style={{ color: 'red' }} onClick={() => handleDelete(key)} />
             </span>
