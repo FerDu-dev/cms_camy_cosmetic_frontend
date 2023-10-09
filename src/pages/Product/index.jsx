@@ -103,6 +103,13 @@ export const Product = () => {
         fetchProducts()
       }, [])
 
+      useEffect(() => {
+        if (changedPage) {
+            fetchProducts()
+            setChangedPage(false)
+        }
+    }, [changedPage])
+
       const handleView = (key) => {
         const product = products.find(product => product.key === key);
         setCurrentProduct(product);

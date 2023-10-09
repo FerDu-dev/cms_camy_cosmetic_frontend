@@ -60,3 +60,41 @@ export const getUsersFromStore = async (storeID) => {
     }
 }
 
+export const getStoresFromTransfer = async (storeID) => {
+    try {
+        const response = await httpClient.get(`/store/product_inventary/transfer/?storeID=${storeID}`)
+        return response.data
+    } catch(e) {
+        console.log(e);
+        return {
+            'data': [],
+            'error': true
+        }
+    }
+}
+
+export const createTransferToOtherStore = async (body) => {
+    try {
+        const response = await httpClient.post('/store/product_inventary/transfer/', body)
+        return response.data
+    } catch(e) {
+        console.log(e);
+        return {
+            'data': [],
+            'error': true
+        }
+    }
+}
+
+export const editProductQuantityInStore = async (body) => {
+    try {
+        const response = await httpClient.put('/store/product_inventary/', body)
+        return response.data
+    } catch(e) {
+        console.log(e);
+        return {
+            'data': [],
+            'error': true
+        }
+    }
+}

@@ -4,14 +4,19 @@ import { SwapOutlined} from '@ant-design/icons';
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { getStoreInventory } from "../../api/store";
+import TransferProducts from "../../components/TransferProducts";
+import EditQuantityProductInStore from "../../components/EditQuantityProductInStore";
 
 export const StoreStock = () => {
     const [loading, setLoading] = useState(false)
+    const [productIDTransfer, setProductID] = useState(null)
+    const [productVariantIDTransfer, setProductVariantID] = useState(null)
     const [products, setProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(6);
     const [total, setTotal] = useState(0)
     const [changedPage, setChangedPage] = useState(false);
+    const [openTransfer, setOpenTransfer] = useState(false)
     const location = useLocation();
 
     const columns = [
@@ -28,11 +33,14 @@ export const StoreStock = () => {
         {
             title: 'Cantidad',
             dataIndex: 'quantity',
-            key: 'quantity' 
+            key: 'quantity',
+            render: (_, {quantity, key}) => (
+              <EditQuantityProductInStore quantity={quantity} productInStoreID={key} fetchProducts={fetchProducts} />
+            ) 
         },
         {
             title: 'Acciones',
-            key:'acciones',
+            key:'key',
             dataIndex: 'key',
             render: (key) => (
                 <span>
@@ -41,9 +49,7 @@ export const StoreStock = () => {
             )
         }
     ];
-      useEffect(() => {
-        fetchProducts()
-      }, [])
+
       const selectedStore = localStorage.getItem('selectedStore')? 
       JSON.parse(localStorage.getItem('selectedStore')) 
       : 
@@ -55,10 +61,12 @@ export const StoreStock = () => {
         
         
         const dataStockTable = response.data.map(item => ({
+            ...item ,
             key: item.id,
             name: item.product.name,
             price: item.product.price,
             quantity: item.quantity,
+            productVariantID: item.productVariantID == 'None' || item.productVariantID == null ? null : item.productVariantID,
         }));
     
         setProducts(dataStockTable); 
@@ -71,8 +79,22 @@ export const StoreStock = () => {
       }
 
       const handleTransfer = (key) => {
-        console.log(key)
+        const item = products.filter(product => product.key == key)[0]
+        setProductID(item.productID)
+        setProductVariantID(item.productVariantID)
+        setOpenTransfer(true);
       };
+
+      useEffect(() => {
+        fetchProducts()
+      }, [])
+
+      useEffect(() => {
+        if (changedPage) {
+            fetchProducts()
+            setChangedPage(false)
+        }
+    }, [changedPage])
 
 
     return (
@@ -83,6 +105,15 @@ export const StoreStock = () => {
             <h1>Inventario Tienda {selectedStore.name}</h1>
             <Table style={{marginBlock: '1rem'}} loading={loading} dataSource={products} columns={columns} pagination={false} /> 
             <Pagination total={total} pageSize={limit} current={currentPage} onChange={(handlePage)} />
+            <TransferProducts
+              openTransfer={openTransfer}
+              setOpenTransfer={setOpenTransfer}
+              fetchProducts={fetchProducts}
+              productIDTransfer={productIDTransfer}
+              setProductID={setProductID}
+              productVariantIDTransfer={productVariantIDTransfer}
+              setProductVariantID={setProductVariantID}
+             />
             </>
            )
 
