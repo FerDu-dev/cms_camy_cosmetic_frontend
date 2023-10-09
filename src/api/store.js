@@ -9,9 +9,20 @@ export const getStores = async (page, limit) => {
     }
 }
 
+
+
 export const createStore = async (body) => {
     try {
         const response = await httpClient.post('/store', body)
+        return response.data
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const updateStore = async (body) => {
+    try {
+        const response = await httpClient.put('/store', body)
         return response.data
     } catch (e) {
         console.log(e)

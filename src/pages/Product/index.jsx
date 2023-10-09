@@ -6,7 +6,11 @@ import ProductsFilter from "../../components/ProductsFilter/products-filter";
 import ProductDetail from "../../components/ProductDetail";
 import ProductsTable from "../../components/ProductsTable/products-table";
 import { getProducts } from "../../api/products";
+<<<<<<< HEAD
 import { Table, Button } from "antd";
+=======
+import { Table, Pagination } from "antd";
+>>>>>>> 02996a71d521f0a90ffca0af6d7a148b1deb8b0d
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -15,7 +19,8 @@ import { useLocation } from "react-router-dom";
 export const Product = () => {
     const [products, setProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(8);
+    const [changedPage, setChangedPage] = useState(false);
+    const [limit, setLimit] = useState(6);
     const [loading, setLoading] = useState(false)
     const [total, setTotal] = useState(0)
     const location = useLocation();
@@ -68,8 +73,13 @@ export const Product = () => {
         setProducts(response.data.map(product => (
           { ...product, key: product.productID}
         )))
-        setTotal(response.data.total)
+        setTotal(response.total)
         setLoading(false)
+      }
+
+      const handlePage = (page) => {
+        setCurrentPage(page)
+        setChangedPage(true)
       }
 
       useEffect(() => {
@@ -96,7 +106,7 @@ export const Product = () => {
             <>
                 <AddProductForm fetchProducts={fetchProducts} />
                 <ProductsFilter />
-                <Table loading={loading} dataSource={products} columns={columns} />
+                <Pagination total={total} pageSize={limit} current={currentPage} onChange={(handlePage)} />
                 <Modal 
                   title="Detalles del producto" 
                   open={isModalVisible} 
@@ -111,6 +121,7 @@ export const Product = () => {
                   >
                   {currentProduct && <ProductDetail product={currentProduct} view={view} setView={setView}/>}
                 </Modal>
+                <Table loading={loading} dataSource={products} columns={columns} pagination={false} /> 
             </>
            )
 

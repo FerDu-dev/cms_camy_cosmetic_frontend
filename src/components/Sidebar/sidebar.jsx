@@ -27,7 +27,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
               route.children?
                 <Menu.SubMenu key={`sub${index}`} icon={route.icon? route.icon : null} title={route.title}>
                   {
-                    route.children.map(child => (
+                    route.children.filter(child => child.subMenu).map(child => (
                       child.childrenElement?
                       child.childrenElement
                       :
@@ -57,7 +57,7 @@ const Sidebar = ({windowWidth, showDrawer, onClose, visible}) => {
               route.children && route.haveSubMenu?
                 <Menu.SubMenu key={`sub${index}`} icon={route.icon? route.icon : null} title={route.title}>
                   {
-                    route.children.map(child => (
+                    route.children.filter(child => child.subMenu).map(child => (
                       child.childrenElement?
                       child.childrenElement
                       :

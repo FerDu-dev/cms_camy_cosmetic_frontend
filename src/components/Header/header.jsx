@@ -31,8 +31,9 @@ export const AppHeader = ({showDrawer, windowWidth}) => {
 
   const fetchStores = async () => {
     const response = await getStores(1, 20);
-    setStores(response.data)
     console.log(response)
+    localStorage.setItem('storeOptions', JSON.stringify(response.data) )
+    setStores(response.data)
   }
 
   const storeMenu = (
