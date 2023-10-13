@@ -87,13 +87,10 @@ const AddProductToStore = ({ product, setIsModalAddToStore, form }) => {
           <Button type="primary" htmlType="submit" onClick={handleSubmit} disabled={loading}>
             {loading ? <Spin /> : 'Agregar producto'}
           </Button>
-        </Form>
-     
+        </Form> 
     </div>
-    
     </>
   );
-    
 };
 
 export default AddProductToStore;
