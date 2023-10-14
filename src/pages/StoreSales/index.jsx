@@ -16,7 +16,6 @@ export const StoreSales = () => {
     const [totalProducts, setTotalProducts] = useState(0);
     const limit = 10; 
     const [changedPage, setChangedPage] = useState(false);
-    const [visible, setVisible] = useState(false)
     const [total, setTotal] = useState(0)
     const [search, setSearch] = useState('');
     const [productTypeFilter, setProductTypeFilter] = useState(null)
@@ -68,7 +67,6 @@ export const StoreSales = () => {
    
     const handleGenerateSale = () => {
         setSaleDetails(selectedProducts);
-        setVisible(true);
       };
   
    
@@ -83,7 +81,8 @@ export const StoreSales = () => {
          {location.pathname === '/tienda/ventas'?
            (
             <>
-          <Button onClick={handleGenerateSale}>Generar Venta</Button>
+            <SaleDetailModal saleDetails={saleDetails} setSaleDetails={setSaleDetails} />
+          {/* <Button onClick={handleGenerateSale}>Generar Venta</Button> */}
           <ProductsFilter 
             search={search}
             setSearch={setSearch}
@@ -112,7 +111,7 @@ export const StoreSales = () => {
             )}
              />
             <Pagination current={currentPage} onChange={handlePageChange} total={totalProducts} pageSize={limit} />
-          <SaleDetailModal saleDetails={saleDetails} setSaleDetails={setSaleDetails} />
+         
           </>
            )
            :

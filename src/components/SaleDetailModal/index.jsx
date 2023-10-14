@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Modal, List, InputNumber, Form, Button, Input } from 'antd';
 
-const SaleDetailModal = ({ saleDetails, setSaleDetails, visible, setVisible }) => {
+export const SaleDetailModal = ({ saleDetails, setSaleDetails }) => {
   const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false)
 
   const handleOk = () => {
     form.validateFields()
@@ -17,6 +18,10 @@ const SaleDetailModal = ({ saleDetails, setSaleDetails, visible, setVisible }) =
   
 
   return (
+    <>
+     <Button type="primary" onClick={() => setVisible(true)} style={{marginBottom:"0.5rem"}}>
+      Generar Venta
+    </Button>
     <Modal
       title="Detalle de la Venta"
       open={visible}
@@ -25,7 +30,7 @@ const SaleDetailModal = ({ saleDetails, setSaleDetails, visible, setVisible }) =
     >
       <List
         itemLayout="horizontal"
-        dataSource={saleDetails}
+        dataSource={saleDetails || []}
         renderItem={item => (
           <List.Item>
             <List.Item.Meta
@@ -50,6 +55,7 @@ const SaleDetailModal = ({ saleDetails, setSaleDetails, visible, setVisible }) =
         </Form.Item>
       </Form>
     </Modal>
+    </>
   );
 };
 
