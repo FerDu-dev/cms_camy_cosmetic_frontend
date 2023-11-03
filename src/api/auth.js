@@ -9,6 +9,7 @@ export const login = async (body) => {
         return response.data
     } catch (e) {
         console.log(e)
+        return {error: e}
     }
 }
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect} from "react";
-import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined, PlusCircleOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import AddProductForm from "../../components/AddProductsForm/add-product-form";
 import ProductsFilter from "../../components/ProductsFilter/products-filter";
 import ProductDetail from "../../components/ProductDetail";
 import AddProductToStore from "../../components/AddProductToStore";
+import { AddVariantForm } from "../../components/AddVariantForm";
 import { getProducts } from "../../api/products";
 import { Table, Button, Pagination, Modal, Tooltip, Form } from "antd";
 import { Outlet } from "react-router-dom";
@@ -26,6 +27,7 @@ export const Product = () => {
     const [search, setSearch] = useState('');
     const [productTypeFilter, setProductTypeFilter] = useState(null)
     const [brandFilter, setBrandFilter] = useState(null)
+    const [isModalAddVariant, setIsModalAddVariant] = useState(false)
     const [priceFilter, setPriceFilter] = useState({
       price: null,
       range: 'greater',
@@ -64,15 +66,29 @@ export const Product = () => {
           dataIndex: 'key',
           render: (key) => (
             <span>
-              <Tooltip title='Ver detalle' ><EyeOutlined style={{ color: 'blue', marginRight:'5px' }} onClick={() => handleView(key)} /></Tooltip>
+              <Tooltip title='Ver detalle'><EyeOutlined style={{ color: 'blue', marginRight:'5px' }} onClick={() => handleView(key)} /></Tooltip>
               <EditOutlined style={{ color: 'green', marginRight:'5px' }} onClick={() => handleEdit(key)} />
               <DeleteOutlined style={{ color: 'red' , marginRight:'5px'}} onClick={() => handleDelete(key)} />
-              <Tooltip title={'Agregar producto a tienda'}><PlusOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddToStore(key)} /></Tooltip>
+              <Tooltip title='Agregar producto a tienda'><PlusOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddToStore(key)} /></Tooltip>
+              <Tooltip title='Agregar variante'><PlusCircleOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddVariant(key)} /></Tooltip>
             </span>
           )
         }
         
+        
       ];
+
+      useEffect(() => {
+        
+        fetchProducts()
+      }, [])
+
+      useEffect(() => {
+        if (changedPage) {
+            fetchProducts()
+            setChangedPage(false)
+        }
+    }, [changedPage])
 
       const fetchProducts = async () => {
         setLoading(true)
@@ -90,6 +106,7 @@ export const Product = () => {
         setProducts(response.data.map(product => (
           { ...product, key: product.productID}
         )))
+        
         setTotal(response.total)
         setLoading(false)
       }
@@ -99,16 +116,9 @@ export const Product = () => {
         setChangedPage(true)
       }
 
-      useEffect(() => {
-        fetchProducts()
-      }, [])
+    
 
-      useEffect(() => {
-        if (changedPage) {
-            fetchProducts()
-            setChangedPage(false)
-        }
-    }, [changedPage])
+    
 
       const handleView = (key) => {
         const product = products.find(product => product.key === key);
@@ -141,6 +151,13 @@ export const Product = () => {
             console.log('Cancel');
           },
         });
+      };
+
+      const handleAddVariant = (key) => {
+        const product = products.find(product => product.key === key);
+        console.log("product en variante:",product)
+        setCurrentProduct(product);
+        setIsModalAddVariant(true);
       };
 
       
@@ -180,6 +197,19 @@ export const Product = () => {
                   >
                   {currentProduct && <ProductDetail product={currentProduct} view={view} setView={setView}/>}
                 </Modal>
+                <Modal 
+                  title="Agregar variante de producto" 
+                  visible={isModalAddVariant} 
+                  onCancel={() => setIsModalAddVariant(false)}
+                  footer={null}
+                >
+                  {currentProduct && 
+                    <AddVariantForm 
+                      product={currentProduct} 
+                    />
+                  }
+                </Modal>
+
                 <Modal 
                   title="Agrega este producto a una tienda" 
                   open={isModalAddToStore} 

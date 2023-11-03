@@ -14,6 +14,7 @@ import StoreStock from '../../pages/StoreStock';
 import StoreConfiguration from '../../pages/StoreConfiguration';
 import { Users } from '../../pages/Users';
 import UserDetail from '../../components/UserDetail';
+import GenerateSaleForm from '../../pages/GenerateSale';
 
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -54,6 +55,12 @@ export const routes = [
                 title: 'Ventas',
                 path: 'ventas',
                 element: <StoreSales />,
+                subMenu:selectedStore,
+            },
+            {
+                title: 'Generar Ventas',
+                path: 'generar-venta',
+                element: <GenerateSaleForm />,
                 subMenu:selectedStore,
             },
             {

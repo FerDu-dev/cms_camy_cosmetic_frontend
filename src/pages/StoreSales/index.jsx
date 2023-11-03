@@ -56,7 +56,8 @@ export const StoreSales = () => {
         setTotal(response.total)
         setLoading(false)
       };
-    const handleProductSelect = (product, checked) => {
+    
+      const handleProductSelect = (product, checked) => {
         if (checked) {
           setSelectedProducts(prevProducts => [...prevProducts, product]);
         } else {
@@ -81,8 +82,8 @@ export const StoreSales = () => {
          {location.pathname === '/tienda/ventas'?
            (
             <>
-            <SaleDetailModal saleDetails={saleDetails} setSaleDetails={setSaleDetails} />
-          {/* <Button onClick={handleGenerateSale}>Generar Venta</Button> */}
+            {/* <SaleDetailModal saleDetails={saleDetails} setSaleDetails={setSaleDetails} /> */}
+          <Button type="primary" style={{marginBottom:"0.5rem"}} onClick={handleGenerateSale}>Generar Venta</Button>
           <ProductsFilter 
             search={search}
             setSearch={setSearch}
@@ -121,4 +122,4 @@ export const StoreSales = () => {
       );
 }
 
-export default StoreSales;
+export default StoreSales;  

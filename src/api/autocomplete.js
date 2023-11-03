@@ -14,4 +14,4 @@ export const fetchOptions = async (value, type_model) => {
 };
 
 
-export default fetchOptions;
+

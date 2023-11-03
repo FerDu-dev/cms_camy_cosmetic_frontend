@@ -6,7 +6,7 @@ import { emptyFields } from '../../helpers/constantFunctions';
 import { login, verifyAdmin } from '../../api/auth';
 import { useNavigate } from 'react-router-dom/dist';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-
+import httpClient from '../../config/httpClient';
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -15,8 +15,8 @@ export const Login = () => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [validation, setValidation] = useState({email: false, password: false});
     const [submitted, setSubmitted] = useState(false);
-
- 
+    
+    
     useEffect(() => {
         const fieldsAreValid = emptyFields({ email, password });
         setIsButtonDisabled(!fieldsAreValid);
@@ -29,12 +29,23 @@ export const Login = () => {
         setSubmitted(true);
         if (!isButtonDisabled) {
             try {
-                const user = await login({ email, password });
-                if (user) {
-                    navigate('/producto');
+                const response = await httpClient.post('/login/', { email, password })
+                if (response.data && response.data.token) {
+                    localStorage.setItem('token_user', response.data.token);
                 }
-            } catch (error) {
-                console.log(error.message);
+                response.data
+                if (response.data) {
+                    navigate('/producto');
+                    
+                }
+            } catch (e) {
+                console.log(e)
+                if (e && e.response && e.response.status == 401) {
+                    setValidation({
+                        email: true,
+                        password: true,
+                    })
+                }
             }
         }
     }
@@ -50,11 +61,11 @@ export const Login = () => {
                     <h1 style={{fontSize:"24px"}} >Login</h1>
                     <p>Iniciar sesión en su cuenta</p>
                 </section>
-                <Form.Item validateStatus={validation.email ? 'error' : ''} help={validation.email ? 'Please, enter the email' : ''}>
+                <Form.Item validateStatus={validation.email ? 'error' : ''} help={validation.email ? 'Por favor, introduce un correo valido' : ''}>
                     <Input type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
                 </Form.Item>
 
-                <Form.Item validateStatus={validation.password ? 'error' : ''} help={validation.password ? 'Please, enter the password' : ''}>
+                <Form.Item validateStatus={validation.password ? 'error' : ''} help={validation.password ? 'Por favor, introduce una contrasena valida' : ''}>
                     <Input.Password type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                 </Form.Item>
 

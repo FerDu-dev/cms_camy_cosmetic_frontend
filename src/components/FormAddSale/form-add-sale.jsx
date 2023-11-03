@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Drawer, Form, Input, Select, List } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { getProducts } from '../../api/products';
-import { createSale } from '../../api/sales';
+// import { createSale } from '../../api/sales';
 
 export const FormAddSale = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -61,9 +61,9 @@ export const FormAddSale = () => {
     event.preventDefault();
     console.log(sale); // Aquí se muestra la venta en la consola
     try {
-      const newSale = await createSale(sale);
-        console.log(`Venta ${newSale.id} creada con éxito`);
-      handleCloseDrawer();
+      // const newSale = await createSale(sale);
+      //   console.log(`Venta ${newSale.id} creada con éxito`);
+      // handleCloseDrawer();
     } catch (error) {
       console.log(error.message);
     }

@@ -55,7 +55,7 @@ const tailLayout = {
   };
 
   return (
-    <Form>
+    <Form style={{display:"flex", flexDirection:"row", gap:"0.5rem", marginBlock:"2rem"}}>
       <Form.Item label="Search">
         <Input value={search} onChange={(e) => setSearch(e.target.value)} />
       </Form.Item>
