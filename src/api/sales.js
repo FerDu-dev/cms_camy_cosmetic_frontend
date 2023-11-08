@@ -3,12 +3,17 @@ import httpClient from "../config/httpClient";
 
 
 
-export const getSales = async () => {
+export const getSales = async (limit, page, storeID, filter = null) => {
+
+  let url = `/store/sale?limit=${limit}&page=${page}&storeID=${storeID}`
+  if (filter) {
+    if (filter.search) url+=`&search=${filter.search}`
+    if (filter.justDate) url+=`&justDate=${filter.justDate}`
+    if (filter.startDate && filter.endDate) url +=`&endDate=${filter.endDate}&startDate=${filter.startDate}`
+  }
   try {
-    
-    //  cuando tenga el back listo
-    // const response = await httpClient.get('/get_sales');
-    // return response.data;
+    const response = await httpClient.get(url);
+    return response.data;
   } catch (e) {
     console.log(e);
   }
@@ -22,5 +27,16 @@ export const generateSale = async (sale) => {
       console.log(e);
     }
   };
+
+
+export const getSalesItems = async (saleID) => {
+  let url = `/store/sale/items?saleID=${saleID}`
+  try {
+    const response = await httpClient.get(url);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
   
 

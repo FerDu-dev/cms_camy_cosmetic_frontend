@@ -36,6 +36,7 @@ export const Product = () => {
     const [form] = Form.useForm();
     
     const { confirm } = Modal
+    const user = JSON.parse(localStorage.getItem('user'))
     const columns = [
         {
           title: 'Nombre',
@@ -67,10 +68,16 @@ export const Product = () => {
           render: (key) => (
             <span>
               <Tooltip title='Ver detalle'><EyeOutlined style={{ color: 'blue', marginRight:'5px' }} onClick={() => handleView(key)} /></Tooltip>
+              {
+                user.role == 0 && (<>
+
+
               <EditOutlined style={{ color: 'green', marginRight:'5px' }} onClick={() => handleEdit(key)} />
               <DeleteOutlined style={{ color: 'red' , marginRight:'5px'}} onClick={() => handleDelete(key)} />
               <Tooltip title='Agregar producto a tienda'><PlusOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddToStore(key)} /></Tooltip>
               <Tooltip title='Agregar variante'><PlusCircleOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddVariant(key)} /></Tooltip>
+                </>)
+              }
             </span>
           )
         }
@@ -167,7 +174,7 @@ export const Product = () => {
           {location.pathname === '/producto'?
            (
             <>
-                <AddProductForm fetchProducts={fetchProducts} />
+               { user.role == 0 && <AddProductForm fetchProducts={fetchProducts} /> } 
                 <ProductsFilter 
                   areVariantProducts={areVariantProducts}
                   setAreVariantProducts={setAreVariantProducts}

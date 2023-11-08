@@ -67,17 +67,20 @@ export const routes = [
                 title: 'Empleados',
                 path: 'empleados',
                 element: <StoreEmployees />,
+                justAdmin: true,
                 subMenu: selectedStore,
             },
             {
                 title: 'Configuracion',
                 path: 'configuracion',
+                justAdmin: true,
                 element: <StoreConfiguration/>,
                 subMenu: selectedStore,
             },
             {
                 title: 'Anadir Tienda',
                 notRouting: true,
+                justAdmin: true,
                 subMenu: true,
                 childrenElement: <AddStoreInMenu />
             }
@@ -89,12 +92,14 @@ export const routes = [
         icon: <SettingOutlined />,
         menu: true,
         haveSubMenu: true,
+        justAdmin: true,
         element: <PrivateRoute><Page><SettingsPage /></Page></PrivateRoute>,
         path: '/configuracion',
         children: [
             {
                 title: 'Marca',
                 path: 'marca',
+                justAdmin: true,
                 element: <PrivateRoute> <BrandSetting /></PrivateRoute>,
                 subMenu: true,
                 index: true,
@@ -103,6 +108,7 @@ export const routes = [
                 title: 'Tipo Producto',
                 path: 'tipo_producto',
                 subMenu: true,
+                justAdmin: true,
                 element: <PrivateRoute> <ProductTypeSetting /></PrivateRoute>
             }
         ]
@@ -111,6 +117,7 @@ export const routes = [
         path: '/usuario',
         icon: <UserOutlined />,
         title: 'Usuarios',
+        justAdmin: true,
         menu: true,
         element:<PrivateRoute><Page> <Users /></Page></PrivateRoute>,
         children: [

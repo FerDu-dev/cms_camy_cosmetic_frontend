@@ -14,7 +14,10 @@ export const login = async (body) => {
 }
 
 export const logout = () => {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token_user');
+    localStorage.removeItem('selectedStore');
+    localStorage.removeItem('storeOptions');
 };
 
 export const verifyAdmin = async () => {

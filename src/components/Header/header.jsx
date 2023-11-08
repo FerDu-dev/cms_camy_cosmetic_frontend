@@ -13,7 +13,7 @@ const { Header } = Layout;
 export const AppHeader = ({showDrawer, windowWidth}) => {
   const [stores, setStores] = useState([])
   const navigate = useNavigate();
-
+  const user = JSON.parse(localStorage.getItem('user'))
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
     navigate('/login');
@@ -54,9 +54,9 @@ export const AppHeader = ({showDrawer, windowWidth}) => {
         <MenuOutlined style={{ color: 'black', fontSize: '20px', marginRight:"2rem" }} onClick={showDrawer}/>
       )}
       <Tooltip placement="left" title={textTienda}> 
-      <Dropdown overlay={storeMenu} placement="bottomCenter" trigger={['click']}>
+     { user.role == 0 && <Dropdown overlay={storeMenu} placement="bottomCenter" trigger={['click']}>
         <ShopOutlined style={{ color: 'black', fontSize: '25px', marginRight:"2rem" }} />
-      </Dropdown>
+      </Dropdown>}
       </Tooltip>
       <Tooltip placement="bottom" title={text}>   
         <LogoutOutlined style={{ color: 'black', fontSize: '20px' }} onClick={handleLogout} />

@@ -18,8 +18,8 @@ export const StoreStock = () => {
     const [changedPage, setChangedPage] = useState(false);
     const [openTransfer, setOpenTransfer] = useState(false)
     const location = useLocation();
-
-    const columns = [
+    const user = JSON.parse(localStorage.getItem('user'))
+    const columns = user.role == 0 ? [
         {
             title: 'Nombre',
             dataIndex: 'name',
@@ -48,7 +48,25 @@ export const StoreStock = () => {
                 </span>
             )
         }
-    ];
+    ] :
+    [
+      {
+          title: 'Nombre',
+          dataIndex: 'name',
+          key: 'name',
+      },
+      {
+          title: 'Precio',
+          dataIndex: 'price',
+          key: 'price' 
+      },
+      {
+          title: 'Cantidad',
+          dataIndex: 'quantity',
+          key: 'quantity',
+        
+      },
+  ]
 
       const selectedStore = localStorage.getItem('selectedStore')? 
       JSON.parse(localStorage.getItem('selectedStore')) 

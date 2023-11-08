@@ -97,9 +97,9 @@ const tailLayout = {
         }
         <InputNumber value={priceFilter.price} placeholder='precio'  onChange={handlePriceRange} />
       </Form.Item>
-      <Form.Item label='Variante de productos'>
+      {/* <Form.Item label='Variante de productos'>
         <Switch checked={areVariantProducts} onChange={(checked) => setAreVariantProducts(checked)}/>
-      </Form.Item>
+      </Form.Item> */}
       <Button onClick = {() => fetchProducts()}>
         Buscar
       </Button>

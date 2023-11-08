@@ -32,8 +32,10 @@ export const Login = () => {
                 const response = await httpClient.post('/login/', { email, password })
                 if (response.data && response.data.token) {
                     localStorage.setItem('token_user', response.data.token);
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
+                    if (response.data.selected_store) localStorage.setItem('selectedStore', JSON.stringify(response.data.selected_store))
                 }
-                response.data
+                
                 if (response.data) {
                     navigate('/producto');
                     
