@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Input, List, Form, InputNumber, Button, Modal, Select, Collapse } from 'antd';
 import ProductsFilter from '../../components/ProductsFilter/products-filter';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getStoreInventory } from '../../api/store';
 import { Pagination } from 'antd';
 import { generateSale } from '../../api/sales';
@@ -14,6 +14,7 @@ const { Panel } = Collapse;
 export const GenerateSaleForm = () => {
     
     const [loading, setLoading] = useState(false);
+    const [loadingSale, setLoadingSale] = useState(false)
     const [products, setProducts] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [saleDetails, setSaleDetails] = useState(null);
@@ -52,6 +53,7 @@ export const GenerateSaleForm = () => {
     null;
 
     const location = useLocation();
+    const navigate = useNavigate();
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -149,6 +151,10 @@ const showModal = (product) => {
     setNewPrice(value);
   };
   
+  const handleQuantityToAdd = (value, maximumQuantity) => {
+
+  }
+  
   
 
   const handlePageChange = (page) => {
@@ -157,6 +163,7 @@ const showModal = (product) => {
   };
 
   const handleGenerateSale = async () => {
+    setLoadingSale(true)
     const sale = {
         storeID: selectedStore.id,
         buyerName,
@@ -175,6 +182,8 @@ const showModal = (product) => {
 
     console.log(sale);
     await generateSale(sale)
+    navigate('/tienda/ventas')
+    setLoadingSale(false)
 };
 
   return (
@@ -277,7 +286,7 @@ const showModal = (product) => {
                 type="primary" 
                 style={{marginBlock:"1rem"}}
                 onClick={handleGenerateSale}
-                disabled={selectedProducts.length === 0 || !buyerName || !buyerEmail || !buyerPhone || !buyerInstagram || !payType}
+                disabled={selectedProducts.length === 0 || !buyerName || !buyerEmail || !buyerPhone || !buyerInstagram || !payType || loadingSale}
                 >
                 Finalizar venta
                 </Button>
