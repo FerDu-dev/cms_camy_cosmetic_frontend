@@ -1,14 +1,16 @@
 import React, { useState, useEffect} from "react";
 import { Table, Button, Pagination, Modal, Tooltip, Form } from "antd";
 import { SwapOutlined} from '@ant-design/icons';
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { getStoreInventory } from "../../api/store";
+import { getStoreInventory, getProductHistory } from "../../api/store";
 import TransferProducts from "../../components/TransferProducts";
 import EditQuantityProductInStore from "../../components/EditQuantityProductInStore";
+import { useNavigate } from "react-router-dom";
 
 export const StoreStock = () => {
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate();
     const [productIDTransfer, setProductID] = useState(null)
     const [productVariantIDTransfer, setProductVariantID] = useState(null)
     const [products, setProducts] = useState([])
@@ -89,6 +91,7 @@ export const StoreStock = () => {
     
         setProducts(dataStockTable); 
         setLoading(false)
+        await getProductHistory(1, 10, selectedStore.id)
     }
 
       const handlePage = (page) => {
@@ -121,6 +124,7 @@ export const StoreStock = () => {
            (
             <>
             <h1>Inventario Tienda {selectedStore.name}</h1>
+            <Button type="primary" style={{marginBottom:"0.5rem"}} onClick={() => navigate('/tienda/historial-productos-transferidos')}>Historial Productos Transferidos</Button>
             <Table style={{marginBlock: '1rem'}} loading={loading} dataSource={products} columns={columns} pagination={false} /> 
             <Pagination total={total} pageSize={limit} current={currentPage} onChange={(handlePage)} />
             <TransferProducts
@@ -132,6 +136,7 @@ export const StoreStock = () => {
               productVariantIDTransfer={productVariantIDTransfer}
               setProductVariantID={setProductVariantID}
              />
+              
             </>
            )
 

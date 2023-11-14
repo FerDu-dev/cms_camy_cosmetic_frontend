@@ -15,6 +15,7 @@ import StoreConfiguration from '../../pages/StoreConfiguration';
 import { Users } from '../../pages/Users';
 import UserDetail from '../../components/UserDetail';
 import GenerateSaleForm from '../../pages/GenerateSale';
+import { HistoryProductTransfer } from '../../pages/HistoryProductTransfer';
 
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -75,6 +76,13 @@ export const routes = [
                 path: 'configuracion',
                 justAdmin: true,
                 element: <StoreConfiguration/>,
+                subMenu: selectedStore,
+            },
+            {
+                title: 'Historial Productos Transferidos',
+                path: 'historial-productos-transferidos',
+                justAdmin: true,
+                element: <HistoryProductTransfer/>,
                 subMenu: selectedStore,
             },
             {

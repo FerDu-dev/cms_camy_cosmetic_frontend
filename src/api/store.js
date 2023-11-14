@@ -98,3 +98,13 @@ export const editProductQuantityInStore = async (body) => {
         }
     }
 }
+
+
+export const getProductHistory = async (page, limit, storeID) => {
+    try {
+        const response = await httpClient.get(`/store/historial/transfer?page=${page}&limit=${limit}&originStoreID=${storeID}`)
+        return response.data;
+    } catch (e) {
+        console.log(e)
+    }
+}
