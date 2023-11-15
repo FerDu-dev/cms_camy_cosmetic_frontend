@@ -17,6 +17,11 @@ export const createProduct = async (body) => {
   return response.data;
 };
 
+export const editProduct = async (body) => {
+  const response = await httpClient.put('/product/', body);
+  return response.data;
+};
+
 export const getProductById = async (id) => {
   try {
     const response = await httpClient.get(`/product/?productID=${id}`);

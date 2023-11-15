@@ -82,7 +82,7 @@ export const HistoryProductTransfer = () => {
         
         setLoading(false)
        
-        setProductsTransfer(formattedProductHistory); // Assuming you have a state variable called productTransfer
+        setProductsTransfer(formattedProductHistory); 
     }
 
       const handlePage = (page) => {

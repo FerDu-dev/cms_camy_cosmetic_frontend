@@ -7,6 +7,14 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    resolve: {
+      alias: [
+      {
+        find: './runtimeConfig',
+        replacement: './runtimeConfig.browser', // ensures browser compatible version of AWS JS SDK is used
+      },
+    ]
+  },
     define: {
       'process.env': {
         ...env,

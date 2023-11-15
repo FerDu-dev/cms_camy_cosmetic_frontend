@@ -24,8 +24,61 @@ const ProductDetail = ({ product, view, setView }) => {
           label: 'Tipo de Producto',
           children: product.productType.productTypeName,
         },
+        {
+          key: '3',
+          label: 'Precio',
+          children: product.price,
+        },
+        {
+          key: '4',
+          label: 'Comentarios',
+          children: product.commentary,
+        },
+        {
+          key: '5',
+          label: 'Cantidad Mínima',
+          children: product.minimunQuantity,
+        },
        
       ];
+
+      const infoDetail = [
+        {
+          key: 1,
+          label: 'Nombre del producto',
+          children: product.name,
+        },
+        {
+          key: 2,
+          label: 'Tipo de Producto',
+          children: product.productType.productTypeName,
+        },
+        {
+          key: 3,
+          label: 'Marca',
+          children: product.brand.name,
+        },
+        {
+          key: 4,
+          label: 'Precio',
+          children: product.price,
+        },
+        {
+          key: 5,
+          label: 'Comentarios',
+          children: product.commentary,
+        },
+        {
+          key: 6,
+          label: 'Cantidad Mínima',
+          children: product.minimunQuantity,
+        },
+        {
+          key:7,
+          label: 'Imagen del producto',
+          children: product.main_picture,
+        }
+      ]
       
 
 
@@ -40,69 +93,28 @@ const ProductDetail = ({ product, view, setView }) => {
 
     useEffect(() => {
         fetchProductById()
+        console.log('product in detail', product)
       }, [])
 
   return (
    <>
-    {view === 'detail' ? (
+   
     <div style={{paddingLeft:"1rem"}}>
-        <div style={{display:"flex", flexDirection:"row", alignItems:"center"}}>
-            <span style={{fontSize:"16px"}}>Nombre del producto:</span>
-            <h1 style={{fontSize:"16px", marginTop:"10px", marginLeft:"10px"}} > {product.name}</h1>
-        </div>
-      <span style={{ fontSize:"16px"}}>Imagenes:</span>
-      {productById && productById.productPictures && (
-        <PhotosProduct productById={productById}/>
+    {infoDetail.map((item) => (
+    <div style={{display:"flex", flexDirection:"row", alignItems:"center"}}>
+        <span style={{fontSize:"16px"}}>{item.label}:</span>
+        {item.label === 'Imagen del producto' ? (
+            <img width={80} height={80} src={item.children} alt="Producto" style={{marginTop:"10px", marginLeft:"10px"}} />
+        ) : (
+            <h1 style={{fontSize:"16px", marginTop:"10px", marginLeft:"10px"}}>{item.children}</h1>
         )}
+    </div>
+    ))}
+       
     
-      <Descriptions title="Informacion" items={itemsInfo} />
-      <h1 style={{fontSize:"16px", marginBottom:"2rem"}}>Variantes:</h1>
-      <Button onClick={() => setView('form')}>Agregar Variante</Button>
-      {productById && productById.productVariants && (
-        <ProductVariants variants={productById.productVariants} />
-        )}
      
     </div>
-    ) : (
-        <>
-       
-        <LeftOutlined style={{marginBottom:"1rem"}} onClick={() => setView('detail')} />
-        <h1 style={{fontSize:"16px", marginBlock:"2rem"}}>Agregar una nueva variante:</h1>
-        <Form style={{display:"flex", flexDirection:"column"}}>
-        <Form.Item
-          label="Nombre de la variante"
-          name="variantName"
-          rules={[{ required: true, message: 'Por favor ingresa el nombre de la variante' }]}
-        >
-          <Input />
-        </Form.Item>
-    
-        <Form.Item
-          label="Descripción"
-          name="description"
-          rules={[{ required: true, message: 'Por favor ingresa una descripción' }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label="Precio especifico"
-          name="price"
-          
-        >
-          <Input />
-        </Form.Item>
-    
-      
-    
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Agregar
-          </Button>
-        </Form.Item>
-      </Form>
-      </>
-    )}
+   
     </>
   );
     

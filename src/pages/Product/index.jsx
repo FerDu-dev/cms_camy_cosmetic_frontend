@@ -3,6 +3,7 @@ import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined, PlusCircleOutl
 import AddProductForm from "../../components/AddProductsForm/add-product-form";
 import ProductsFilter from "../../components/ProductsFilter/products-filter";
 import ProductDetail from "../../components/ProductDetail";
+import ProductEdit from "../../components/ProductEdit";
 import AddProductToStore from "../../components/AddProductToStore";
 import { AddVariantForm } from "../../components/AddVariantForm";
 import { getProducts } from "../../api/products";
@@ -22,6 +23,7 @@ export const Product = () => {
     const location = useLocation();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isModalAddToStore, setIsModalAddToStore] = useState(false)
+    const [isModalEdit, setIsModalEdit] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null);
     const [areVariantProducts, setAreVariantProducts] = useState(false)
     const [search, setSearch] = useState('');
@@ -34,7 +36,7 @@ export const Product = () => {
     })
     const [view, setView] = useState('detail');
     const [form] = Form.useForm();
-    
+    const [productEdited, setProductEdited] = useState(false);
     const { confirm } = Modal
     const user = JSON.parse(localStorage.getItem('user'))
     const columns = [
@@ -71,9 +73,8 @@ export const Product = () => {
               {
                 user.role == 0 && (<>
 
-
-              <EditOutlined style={{ color: 'green', marginRight:'5px' }} onClick={() => handleEdit(key)} />
-              <DeleteOutlined style={{ color: 'red' , marginRight:'5px'}} onClick={() => handleDelete(key)} />
+              <Tooltip title='Editar producto'>  <EditOutlined style={{ color: 'green', marginRight:'5px' }} onClick={() => handleEdit(key)} /></Tooltip>
+              {/* <DeleteOutlined style={{ color: 'red' , marginRight:'5px'}} onClick={() => handleDelete(key)} /> */}
               <Tooltip title='Agregar producto a tienda'><PlusOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddToStore(key)} /></Tooltip>
               <Tooltip title='Agregar variante'><PlusCircleOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddVariant(key)} /></Tooltip>
                 </>)
@@ -124,16 +125,16 @@ export const Product = () => {
       }
 
     
-
-    
-
       const handleView = (key) => {
         const product = products.find(product => product.key === key);
         setCurrentProduct(product);
         setIsModalVisible(true);
       };
+
       const handleEdit = (key) => {
-        console.log(key)
+        const product = products.find(product => product.key === key);
+        setCurrentProduct(product);
+        setIsModalEdit(true);
       };
 
       const handleAddToStore = (key) => {
@@ -214,6 +215,28 @@ export const Product = () => {
                     <AddVariantForm 
                       product={currentProduct} 
                     />
+                  }
+                </Modal>
+                <Modal 
+                  title="Editar producto" 
+                  open={isModalEdit} 
+                  onCancel={() => setIsModalEdit(false)}
+                  footer={
+                      <Button type="primary" 
+                      onClick={() => { 
+                        form.submit(); 
+                        setIsModalEdit(false); 
+                        
+                        }}>
+                        Guardar
+                      </Button>
+                  }
+                >
+                  {currentProduct && 
+                    <ProductEdit 
+                      product={currentProduct} 
+                      form={form} 
+                      onProductEdited={() => setProductEdited(true)} />
                   }
                 </Modal>
 
