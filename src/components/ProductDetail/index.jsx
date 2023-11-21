@@ -111,7 +111,7 @@ const ProductDetail = ({ product, view, setView }) => {
     </div>
     ))}
        
-    
+          
      
     </div>
    
