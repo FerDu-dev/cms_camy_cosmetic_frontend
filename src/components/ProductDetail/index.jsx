@@ -1,11 +1,11 @@
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { getProductById } from '../../api/products';
-import { Descriptions, Form, Input } from 'antd';
+import { Descriptions, Form, Input, Table } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import PhotosProduct from '../PhotosProduct';
 import ProductVariants from '../VariantsProduct';
-
+import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined, PlusCircleOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
 const ProductDetail = ({ product, view, setView }) => {
     const [loading, setLoading] = useState(false)
@@ -13,34 +13,29 @@ const ProductDetail = ({ product, view, setView }) => {
     
 
 
-    const itemsInfo = [
-        {
-          key: '1',
-          label: 'Marca',
-          children: product.brand.name,
-        },
-        {
-          key: '2',
-          label: 'Tipo de Producto',
-          children: product.productType.productTypeName,
-        },
-        {
-          key: '3',
-          label: 'Precio',
-          children: product.price,
-        },
-        {
-          key: '4',
-          label: 'Comentarios',
-          children: product.commentary,
-        },
-        {
-          key: '5',
-          label: 'Cantidad Mínima',
-          children: product.minimunQuantity,
-        },
-       
-      ];
+    const columns = [
+      {
+        title: 'Imagen',
+        dataIndex: 'image',
+        key: 'image',
+        render: (text, record) => <img width={80} height={80} src={record.image} alt="Variante del producto" />
+      },
+      {
+        title: 'Nombre',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Acciones',
+        key:'acciones',
+        dataIndex: 'key',
+        render: (key, __, record) => (
+          <span>
+            <DeleteOutlined style={{ color: 'red', marginRight: '5px' }} onClick={() => handleDelete(record.key)} />
+          </span>
+        )
+      }
+    ];
 
       const infoDetail = [
         {
@@ -77,7 +72,18 @@ const ProductDetail = ({ product, view, setView }) => {
           key:7,
           label: 'Imagen del producto',
           children: product.main_picture,
+        },
+        {
+          key:8,
+          label: 'Variante del producto:',
+        },
+        {
+
+          key:9,
+         
+          children:  <Table dataSource={productById?.productsVariants} columns={columns} />,
         }
+
       ]
       
 
@@ -87,14 +93,29 @@ const ProductDetail = ({ product, view, setView }) => {
         const response = await getProductById(product.key)
         setProductById(response.data)
         
-        console.log("product by id",productById)
         setLoading(false)
     }
 
     useEffect(() => {
         fetchProductById()
-        console.log('product in detail', product)
       }, [])
+
+       const handleDelete = (key) => {
+        confirm({
+          title: 'Estas seguro de eliminar este producto?',
+          icon: <ExclamationCircleFilled />,
+          content: <span>Producto: {productById.products.name}</span>,
+          okText: 'Yes',
+          okType: 'danger',
+          cancelText: 'No',
+          onOk: async() => {
+           await deleteProduct(productById.products.productID)
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+      };
 
   return (
    <>
@@ -108,7 +129,9 @@ const ProductDetail = ({ product, view, setView }) => {
         ) : (
             <h1 style={{fontSize:"16px", marginTop:"10px", marginLeft:"10px"}}>{item.children}</h1>
         )}
+        
     </div>
+    
     ))}
        
           

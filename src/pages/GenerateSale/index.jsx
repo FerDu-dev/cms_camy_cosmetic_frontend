@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Input, List, Form, InputNumber, Button, Modal, Select, Collapse } from 'antd';
+import { Card, Input, List, Form, InputNumber, Button, Modal, Select, Collapse, Tooltip} from 'antd';
 import ProductsFilter from '../../components/ProductsFilter/products-filter';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getStoreInventory } from '../../api/store';
 import { Pagination } from 'antd';
 import { generateSale } from '../../api/sales';
+import { getProductById } from '../../api/products';
 
 const { Option } = Select;
 
@@ -26,6 +27,7 @@ export const GenerateSaleForm = () => {
     const [search, setSearch] = useState('');
     const [productTypeFilter, setProductTypeFilter] = useState(null);
     const [brandFilter, setBrandFilter] = useState(null);
+    const [productById, setProductById] = useState(null);
     const [priceFilter, setPriceFilter] = useState({
         price: null,
         range: 'greater',
@@ -73,6 +75,13 @@ export const GenerateSaleForm = () => {
         setTotal(response.total)
         setLoading(false)
     };
+
+    const fetchProductById = async () => {
+        setLoading(true)
+        const response = await getProductById(product.key)
+        setProductById(response.data)
+        setLoading(false)
+    }
 
     const handleProductAdd = (product) => {
         if (quantityToAdd > product.quantity) {
@@ -193,33 +202,23 @@ const showModal = (product) => {
         <div style={{display:"flex", flexDirection:"row", gap:'1rem'}}>
         <div style={{width:"75%"}}>
         <Collapse defaultActiveKey={['1']}>
-    <Panel header="Datos del comprador" key="1">
-        <Input placeholder="Nombre" style={{marginBlock:"10px"}} onChange={e => setBuyerName(e.target.value)}/>
-        <Input placeholder="Correo" style={{marginBlock:"10px"}} onChange={e => setBuyerEmail(e.target.value)}/>
-        <Input placeholder="Teléfono" style={{marginBlock:"10px"}} onChange={e => setBuyerPhone(e.target.value)}/>
-        <Input placeholder="Instagram" style={{marginBlock:"10px"}} onChange={e => setBuyerInstagram(e.target.value)}/>
-        <div style={{display:"flex", flexDirection:"column"}}>
-            <span style={{marginBlock:"0.5rem"}}>Metodo de pago</span>
-            <Select defaultValue="" style={{ width: 120 }} onChange={setPayType}>
-                <Option value="efectivo">Efectivo</Option>
-                <Option value="transferencia">Transferencia</Option>
-                <Option value="zelle">Zelle</Option>
-                <Option value="pago_movil">Pago Móvil</Option>
-            </Select>
-        </div>
-    </Panel>
-</Collapse>
-            {/* <ProductsFilter 
-                search={search}
-                setSearch={setSearch}
-                productTypeFilter={productTypeFilter}
-                setProductTypeFilter={setProductTypeFilter}
-                brandFilter={brandFilter}
-                setBrandFilter={setBrandFilter}
-                priceFilter={priceFilter}
-                setPriceFilter={setPriceFilter}
-                fetchProducts={fetchProducts}
-            /> */}
+            <Panel header="Datos del comprador" key="1">
+                <Input placeholder="Nombre" style={{marginBlock:"10px"}} onChange={e => setBuyerName(e.target.value)}/>
+                <Input placeholder="Correo" style={{marginBlock:"10px"}} onChange={e => setBuyerEmail(e.target.value)}/>
+                <Input placeholder="Teléfono" style={{marginBlock:"10px"}} onChange={e => setBuyerPhone(e.target.value)}/>
+                <Input placeholder="Instagram" style={{marginBlock:"10px"}} onChange={e => setBuyerInstagram(e.target.value)}/>
+                <div style={{display:"flex", flexDirection:"column"}}>
+                    <span style={{marginBlock:"0.5rem"}}>Metodo de pago</span>
+                    <Select defaultValue="" style={{ width: 120 }} onChange={setPayType}>
+                        <Option value="efectivo">Efectivo</Option>
+                        <Option value="transferencia">Transferencia</Option>
+                        <Option value="zelle">Zelle</Option>
+                        <Option value="pago_movil">Pago Móvil</Option>
+                    </Select>
+                </div>
+            </Panel>
+        </Collapse>
+        
         <List
             itemLayout="horizontal"
             dataSource={products}
@@ -248,13 +247,53 @@ const showModal = (product) => {
                     />
             </Form.Item>
             <Button type="primary" onClick={() => handleProductAdd(item)}>Agregar</Button>
-
+                <Button type="primary" onClick={() => fetchProductById(item.key)} >Ver variantes</Button>
             </div>
+            {productById  && (
+                    <Collapse>
+                        {productById?.productsVariants?.map((variant, index) => (
+                            <Panel header={variant.name} key={index}>
+                                <List
+                                    itemLayout="horizontal"
+                                    dataSource={variant?.products}
+                                    renderItem={product => (
+                                        <List.Item>
+                                            <List.Item.Meta
+                                                title={`Nombre: ${product.name}`}
+                                                description={`Precio: ${product.price}, Cantidad disponible: ${product.quantity}`}
+                                            />
+                                            <div style={{display:"flex", gap:"10px"}}>
+                                                <Form.Item label="Cantidad" style={{marginRight:"1rem"}}>
+                                                    <InputNumber 
+                                                        min={1}  
+                                                        onChange={(value) => setQuantityToAdd(value)} />
+                                                </Form.Item>
+                                                <Form.Item label="Precio">
+                                                    <InputNumber 
+                                                        defaultValue={product.price} 
+                                                        min={1} 
+                                                        onChange={(value) => {
+                                                            if (!Number.isInteger(value)) {
+                                                                message.error('Por favor, introduce solo números');
+                                                            }
+                                                        }}
+                                                        />
+                                                </Form.Item>
+                                                <Button type="primary" onClick={() => handleProductAdd(product)}>Agregar</Button>
+                                            </div>
+                                        </List.Item>
+                                    )}
+                                />
+                            </Panel>
+                        ))}
+                    </Collapse>
+                )}
+            
             </List.Item>
             </>
         )}
         />
-            <Pagination current={currentPage} total={total} pageSize={limit} onChange={fetchProducts} />
+        <Pagination current={currentPage} total={total} pageSize={limit} onChange={fetchProducts} />
 
         </div>
         <div style={{width:"25%"}}>

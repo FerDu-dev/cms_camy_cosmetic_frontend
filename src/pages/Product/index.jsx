@@ -10,7 +10,7 @@ import { getProducts } from "../../api/products";
 import { Table, Button, Pagination, Modal, Tooltip, Form } from "antd";
 import { Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
+import { deleteProduct, getProductById } from "../../api/products";
 
 
 export const Product = () => {
@@ -67,14 +67,19 @@ export const Product = () => {
           title: 'Acciones',
           key:'acciones',
           dataIndex: 'key',
-          render: (key) => (
+          render: (key, __, record) => (
             <span>
               <Tooltip title='Ver detalle'><EyeOutlined style={{ color: 'blue', marginRight:'5px' }} onClick={() => handleView(key)} /></Tooltip>
               {
-                user.role == 0 && (<>
-
+                user.role == 0 && 
+              (<>
               <Tooltip title='Editar producto'>  <EditOutlined style={{ color: 'green', marginRight:'5px' }} onClick={() => handleEdit(key)} /></Tooltip>
-              {/* <DeleteOutlined style={{ color: 'red' , marginRight:'5px'}} onClick={() => handleDelete(key)} /> */}
+             {record.sales ? (
+                  <Tooltip title='Eliminar producto'>
+                    <DeleteOutlined style={{ color: 'red', marginRight: '5px' }} onClick={() => handleDelete(record.key)} />
+                  </Tooltip>
+                ) : null}
+              {/* <DeleteOutlined style={{ color: 'red', marginRight: '5px' }} onClick={() => handleDelete(record.key)} /> */}
               <Tooltip title='Agregar producto a tienda'><PlusOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddToStore(key)} /></Tooltip>
               <Tooltip title='Agregar variante'><PlusCircleOutlined style={{cursor: 'pointer', marginInline:'2px'}} onClick={() => handleAddVariant(key)} /></Tooltip>
                 </>)
@@ -152,8 +157,8 @@ export const Product = () => {
           okText: 'Yes',
           okType: 'danger',
           cancelText: 'No',
-          onOk() {
-            console.log("key de eliminar",key);
+          onOk: async() => {
+           await deleteProduct(product.productID)
           },
           onCancel() {
             console.log('Cancel');

@@ -31,6 +31,16 @@ export const getProductById = async (id) => {
   }
 };
 
+export const deleteProduct = async (id) => {
+  try {
+    const response = await httpClient.delete(`/product/${id}`);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+
 
 
 export const updateProduct = async (id, product) => {
@@ -42,14 +52,6 @@ export const updateProduct = async (id, product) => {
   }
 };
 
-export const deleteProduct = async (id) => {
-  try {
-    const response = await httpClient.delete(`/delete_product/${id}`);
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-};
 
 export const getFilteredProducts = async (filters) => {
     try {
